@@ -180,11 +180,11 @@ function ProductPanel({ heroFilter, setHeroFilter }: { heroFilter: "All" | "Stor
   );
 }
 
-function SectionHeading({ eyebrow, title, intro }: { eyebrow: string; title: string; intro?: string }) {
+function SectionHeading({ eyebrow, title, intro, id }: { eyebrow: string; title: string; intro?: string; id: string }) {
   return (
     <div className="sl-section-head">
       <p className="sl-eyebrow">{eyebrow}</p>
-      <h2 className="sl-title">{title}</h2>
+      <h2 className="sl-title" id={id}>{title}</h2>
       {intro && <p className="sl-lead">{intro}</p>}
     </div>
   );
@@ -200,7 +200,7 @@ function ProblemSection() {
   return (
     <section className="sl-section sl-section-tint" aria-labelledby="problem-title">
       <div className="sl-container">
-        <SectionHeading eyebrow="The problem" title="Produce moves. Information gets lost." intro="Agricultural produce passes through storage centres, distributors and vendors before it reaches consumers. The information needed to manage that journey is often scattered across calls, messages and guesswork." />
+        <SectionHeading id="problem-title" eyebrow="The problem" title="Produce moves. Information gets lost." intro="Agricultural produce passes through storage centres, distributors and vendors before it reaches consumers. The information needed to manage that journey is often scattered across calls, messages and guesswork." />
         <div className="sl-problem-grid">{problems.map(([title, text]) => <article className="sl-text-card" key={title}><h3>{title}</h3><p>{text}</p></article>)}</div>
       </div>
     </section>
@@ -219,7 +219,7 @@ function SolutionSection() {
   return (
     <section className="sl-section" aria-labelledby="solution-title">
       <div className="sl-container sl-split">
-        <div><SectionHeading eyebrow="The solution" title="One connected platform for the agricultural supply chain." /><p className="sl-copy">ShelfLife brings discovery, inventory, freshness intelligence and logistics together, so produce can be managed from one stage of distribution to the next.</p></div>
+        <div><SectionHeading id="solution-title" eyebrow="The solution" title="One connected platform for the agricultural supply chain." /><p className="sl-copy">ShelfLife brings discovery, inventory, freshness intelligence and logistics together, so produce can be managed from one stage of distribution to the next.</p></div>
         <ul className="sl-list">{features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
       </div>
     </section>
@@ -230,9 +230,9 @@ function MapSection({ filter, setFilter, selected, setSelected }: { filter: MapF
   return (
     <section className="sl-section sl-section-tint" id="demo" aria-labelledby="map-title">
       <div className="sl-container">
-        <SectionHeading eyebrow="Interactive map" title="Find the produce. Find the people. See what's available." intro="Explore nearby storage centres, distributors and vendors on one map. Search for produce, compare availability and discover businesses across the network." />
+        <SectionHeading id="map-title" eyebrow="Interactive map" title="Find the produce. Find the people. See what's available." intro="Explore nearby storage centres, distributors and vendors on one map. Search for produce, compare availability and discover businesses across the network." />
         <span className="sl-demo-note">Prototype preview. Sample locations and stock, not live businesses.</span>
-        <div className="sl-map-layout" style={{ marginTop: 26 }}>
+        <div className="sl-map-layout sl-map-results">
           <div className="sl-map-card">
             <div className="sl-map-toolbar">
               <h3>Map view</h3>
@@ -256,7 +256,7 @@ function MapSection({ filter, setFilter, selected, setSelected }: { filter: MapF
 function ListingCard({ id, title, subtitle, selected, onSelect, children }: { id: string; title: string; subtitle: string; selected: boolean; onSelect: () => void; children: string }) {
   return (
     <Button id={`listing-${id}`} type="button" variant="outline" className="sl-listing-card" aria-pressed={selected} onClick={onSelect}>
-      <span className="sl-listing-card-head"><span><strong>{title}</strong><span className="sl-listing-card p">{subtitle}</span></span><span className="sl-sample-tag">Sample</span></span>
+      <span className="sl-listing-card-head"><span><strong>{title}</strong><span className="sl-listing-subtitle">{subtitle}</span></span><span className="sl-sample-tag">Sample</span></span>
       <span className="sl-listing-card-body">{children}</span>
     </Button>
   );
@@ -272,7 +272,7 @@ function InventorySection() {
   return (
     <section className="sl-section" id="business" aria-labelledby="inventory-title">
       <div className="sl-container">
-        <SectionHeading eyebrow="Inventory management" title="Every business has a clearer view of its stock." intro="Each business gets its own inventory dashboard. When produce moves between businesses, ShelfLife connects the records so stock is never counted twice." />
+        <SectionHeading id="inventory-title" eyebrow="Inventory management" title="Every business has a clearer view of its stock." intro="Each business gets its own inventory dashboard. When produce moves between businesses, ShelfLife connects the records so stock is never counted twice." />
         <div className="sl-role-grid">{roles.map(([role, bullets]) => <article className="sl-role-card" key={role as string}><h3>{role as string}</h3><ul>{(bullets as string[]).map((bullet) => <li key={bullet}>{bullet}</li>)}</ul></article>)}</div>
         <div className="sl-table-wrap">
           <div className="sl-table-head"><h3>Inventory overview</h3><span className="sl-sample-tag">Sample data</span></div>
@@ -288,7 +288,7 @@ function AIShelfLifeSection() {
   return (
     <section className="sl-section sl-section-tint" id="ai" aria-labelledby="ai-title">
       <div className="sl-container sl-split sl-ai-layout">
-        <div><SectionHeading eyebrow="AI shelf-life intelligence" title="Know what needs attention before it goes to waste." /><p className="sl-copy">ShelfLife uses available produce, batch and storage information to estimate remaining shelf life, flag batches that need attention and help businesses decide what to sell first.</p><ul className="sl-list" style={{ marginTop: 18 }}>{points.map((point) => <li key={point}>{point}</li>)}</ul></div>
+        <div><SectionHeading id="ai-title" eyebrow="AI shelf-life intelligence" title="Know what needs attention before it goes to waste." /><p className="sl-copy">ShelfLife uses available produce, batch and storage information to estimate remaining shelf life, flag batches that need attention and help businesses decide what to sell first.</p><ul className="sl-list sl-feature-list">{points.map((point) => <li key={point}>{point}</li>)}</ul></div>
         <BatchCard />
       </div>
     </section>
@@ -311,7 +311,7 @@ function LogisticsSection() {
   return (
     <section className="sl-section" aria-labelledby="logistics-title">
       <div className="sl-container sl-split sl-ai-layout">
-        <div><SectionHeading eyebrow="Logistics and delivery" title="Move produce from one point to the next." intro="From warehouse pickups to wholesale deliveries and customer orders, ShelfLife connects businesses with independent dispatch riders and keeps every step visible." /><ul className="sl-list">{features.map((feature) => <li key={feature}>{feature}</li>)}</ul></div>
+        <div><SectionHeading id="logistics-title" eyebrow="Logistics and delivery" title="Move produce from one point to the next." intro="From warehouse pickups to wholesale deliveries and customer orders, ShelfLife connects businesses with independent dispatch riders and keeps every step visible." /><ul className="sl-list">{features.map((feature) => <li key={feature}>{feature}</li>)}</ul></div>
         <RouteStatus />
       </div>
     </section>
@@ -334,7 +334,7 @@ function VerificationSection() {
   ];
   return (
     <section className="sl-section sl-section-tint" aria-labelledby="verification-title">
-      <div className="sl-container"><SectionHeading eyebrow="Verification and traceability" title="Keep the journey of every batch connected." intro="With business records, product information and batch history, ShelfLife makes it easier to understand where produce comes from and how it moves through the supply chain." /><div className="sl-verify-grid">{entries.map(([title, text]) => <article className="sl-text-card" key={title}><h3>{title}</h3><p>{text}</p></article>)}</div></div>
+      <div className="sl-container"><SectionHeading id="verification-title" eyebrow="Verification and traceability" title="Keep the journey of every batch connected." intro="With business records, product information and batch history, ShelfLife makes it easier to understand where produce comes from and how it moves through the supply chain." /><div className="sl-verify-grid">{entries.map(([title, text]) => <article className="sl-text-card" key={title}><h3>{title}</h3><p>{text}</p></article>)}</div></div>
     </section>
   );
 }
@@ -348,7 +348,7 @@ function HowItWorksSection() {
   ];
   return (
     <section className="sl-section" id="how" aria-labelledby="how-title">
-      <div className="sl-container"><SectionHeading eyebrow="How it works" title="From discovery to delivery." /><div className="sl-steps">{steps.map(([number, title, description]) => <article className="sl-step" key={number}><span className="sl-step-number">{number}</span><h3>{title}</h3><p>{description}</p></article>)}</div></div>
+      <div className="sl-container"><SectionHeading id="how-title" eyebrow="How it works" title="From discovery to delivery." /><div className="sl-steps">{steps.map(([number, title, description]) => <article className="sl-step" key={number}><span className="sl-step-number">{number}</span><h3>{title}</h3><p>{description}</p></article>)}</div></div>
     </section>
   );
 }
@@ -363,7 +363,7 @@ function WhoItsForSection() {
   ];
   return (
     <section className="sl-section sl-section-tint" aria-labelledby="audience-title">
-      <div className="sl-container"><SectionHeading eyebrow="Who it's for" title="Built for every link in the distribution chain." /><div className="sl-audience-grid">{audiences.map(([title, text]) => <article className="sl-text-card" key={title}><h3>{title}</h3><p>{text}</p></article>)}</div></div>
+      <div className="sl-container"><SectionHeading id="audience-title" eyebrow="Who it's for" title="Built for every link in the distribution chain." /><div className="sl-audience-grid">{audiences.map(([title, text]) => <article className="sl-text-card" key={title}><h3>{title}</h3><p>{text}</p></article>)}</div></div>
     </section>
   );
 }
@@ -371,7 +371,7 @@ function WhoItsForSection() {
 function ClosingCTA() {
   return (
     <section className="sl-closing" id="about" aria-labelledby="closing-title">
-      <div className="sl-container"><h2 className="sl-title">Better connected. Better managed. Less produce wasted.</h2><p className="sl-lead">ShelfLife brings the agricultural distribution network into one place, helping businesses find produce, manage stock and move it with better visibility.</p><Button asChild className="sl-button"><a href="#demo">Explore the ShelfLife concept</a></Button></div>
+      <div className="sl-container"><h2 className="sl-title" id="closing-title">Better connected. Better managed. Less produce wasted.</h2><p className="sl-lead">ShelfLife brings the agricultural distribution network into one place, helping businesses find produce, manage stock and move it with better visibility.</p><Button asChild className="sl-button"><a href="#demo">Explore the ShelfLife concept</a></Button></div>
     </section>
   );
 }
