@@ -30,4 +30,4 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Project architecture
-- Keep ShelfLife's single-page sections, reusable product-preview components, and semantic design tokens in the existing TanStack route and shared stylesheet so the product narrative stays consistent and the page remains easy to maintain.
+- Keep ShelfLife as a single-page experience in the existing TanStack route and shared stylesheet, with reusable narrative components and semantic tokens to keep the product story consistent without duplicating page structure.
