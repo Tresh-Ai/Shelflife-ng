@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-
-type BusinessKind = "Storage" | "Distributor" | "Vendor";
-type MapFilter = "All" | "Storage Centres" | "Distributors" | "Vendors";
+import { matchesMapFilter, type BusinessKind, type MapFilter } from "@/lib/shelf-life-map";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,13 +24,6 @@ const sampleLocations: { kind: BusinessKind; x: number; y: number; label: string
   { kind: "Vendor", x: 478, y: 105, label: "Sample Vendor", color: "var(--muted)" },
   { kind: "Vendor", x: 516, y: 270, label: "Vendor", color: "var(--muted)" },
 ];
-
-function matchesFilter(kind: BusinessKind, filter: MapFilter) {
-  return filter === "All" ||
-    (filter === "Storage Centres" && kind === "Storage") ||
-    (filter === "Distributors" && kind === "Distributor") ||
-    (filter === "Vendors" && kind === "Vendor");
-}
 
 function ShelfLifePage() {
   const [mapFilter, setMapFilter] = useState<MapFilter>("All");
@@ -95,7 +86,7 @@ function ProductMap({ filter, compact = false }: { filter: MapFilter | "All" | "
     if (filter === "All") return true;
     if (filter === "Storage") return kind === "Storage";
     if (filter === "Vendors") return kind === "Vendor";
-    return matchesFilter(kind, filter);
+    return matchesMapFilter(kind, filter);
   };
 
   return (
