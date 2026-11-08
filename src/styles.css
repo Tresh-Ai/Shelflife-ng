@@ -138,6 +138,8 @@
     --border: #29382D;
     --warn: #FBBF24;
     --crit: #F87171;
+    --primary-foreground: #0C1510;
+    --destructive-foreground: #0C1510;
   }
 }
 
@@ -155,6 +157,7 @@
 
   html { scroll-padding-top: 76px; scroll-behavior: smooth; }
   :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .sl-page a:focus-visible, .sl-page button:focus-visible { outline: 2px solid var(--brand) !important; outline-offset: 2px; box-shadow: none; }
   ::selection { background: var(--brand); color: var(--primary-foreground); }
 }
 
