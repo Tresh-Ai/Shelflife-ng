@@ -1,2 +1,3 @@
-- [x] Build ShelfLife single-page marketing site with supplied sections, exact copy and UI interactions.
-- [x] Verify map filters, listing selection, responsive widths, and project build diagnostics.
+- [ ] Redesign the ShelfLife single-page site with a clear, editorial opening and no fabricated product-demo UI.
+- [ ] Preserve the core supply-chain narrative and keep every navigation link pointed at real page content.
+- [ ] Verify the redesigned page at mobile, tablet, and desktop widths and check current preview diagnostics.
