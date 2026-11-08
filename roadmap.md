@@ -1,0 +1,2 @@
+- [ ] Build ShelfLife single-page marketing site with supplied sections, exact copy and UI interactions.
+- [ ] Verify map filters, listing selection, responsive widths, and project build diagnostics.
