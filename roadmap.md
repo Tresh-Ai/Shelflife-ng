@@ -1,3 +1,3 @@
-- [ ] Redesign the ShelfLife single-page site with a clear, editorial opening and no fabricated product-demo UI.
-- [ ] Preserve the core supply-chain narrative and keep every navigation link pointed at real page content.
-- [ ] Verify the redesigned page at mobile, tablet, and desktop widths and check current preview diagnostics.
+- [x] Redesign the ShelfLife single-page site with a clear, editorial opening and no fabricated product-demo UI.
+- [x] Preserve the core supply-chain narrative and keep every navigation link pointed at real page content.
+- [x] Verify the redesigned page at mobile, tablet, and desktop widths and check current preview diagnostics.
