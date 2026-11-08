@@ -70,7 +70,7 @@ function Hero() {
     <section className="sl-hero sl-container" aria-labelledby="hero-title">
       <div className="sl-hero-copy">
         <p className="sl-kicker"><span className="sl-kicker-dot" /> Agricultural supply, connected</p>
-        <h1 id="hero-title">Fresh produce.<br /><span>Clear movement.</span></h1>
+        <h1 id="hero-title"><span className="sl-hero-line">Fresh produce.</span><span className="sl-hero-line sl-hero-accent">Clear movement.</span></h1>
         <p className="sl-hero-lead">
           ShelfLife connects the people and places behind fresh produce, from storage and distribution to the last mile.
         </p>
