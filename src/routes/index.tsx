@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowRight, Boxes, MapPin, PackageCheck, Route as RouteIcon, ScanLine, Warehouse } from "lucide-react";
+import { ArrowRight, Boxes, MapPin, PackageCheck, Route as RouteIcon, ScanLine, Warehouse } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import distributionHub from "@/assets/shelflife-distribution-hub.jpg";
@@ -6,10 +6,10 @@ import distributionHub from "@/assets/shelflife-distribution-hub.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ShelfLife | A clearer supply chain for fresh produce" },
+      { title: "ShelfLife | Uber for farm produce" },
       { name: "description", content: "ShelfLife connects agricultural storage, distributors, vendors and delivery teams to help businesses discover produce, manage inventory and coordinate each handoff." },
-      { property: "og:title", content: "ShelfLife | A clearer supply chain for fresh produce" },
-      { property: "og:description", content: "One connected way to discover produce, manage inventory and coordinate each handoff." },
+      { property: "og:title", content: "ShelfLife | Uber for farm produce" },
+      { property: "og:description", content: "Request produce, get matched to the nearest stock and a rider, and track it live." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -69,16 +69,16 @@ function Hero() {
   return (
     <section className="sl-hero sl-container" aria-labelledby="hero-title">
       <div className="sl-hero-copy">
-        <p className="sl-kicker"><span className="sl-kicker-dot" /> Agricultural supply, connected</p>
-        <h1 id="hero-title"><span className="sl-hero-line">Fresh produce.</span><span className="sl-hero-line sl-hero-accent">Clear movement.</span></h1>
+        <p className="sl-kicker"><span className="sl-kicker-dot" /> Not a marketplace. A movement network.</p>
+        <h1 id="hero-title"><span className="sl-hero-line">Uber for</span><span className="sl-hero-line sl-hero-accent">farm produce.</span></h1>
         <p className="sl-hero-lead">
-          ShelfLife connects the people and places behind fresh produce, from storage and distribution to the last mile.
+          Need produce moved? Request it. ShelfLife finds the nearest stock, books a rider and tracks it to your door.
         </p>
         <div className="sl-hero-actions">
           <Button asChild className="sl-button sl-button-primary">
-            <a href="#platform">Meet the platform <ArrowRight aria-hidden="true" /></a>
+            <a href="#how">See how it works <ArrowRight aria-hidden="true" /></a>
           </Button>
-          <a className="sl-text-link" href="#how">See how it works <ArrowDown aria-hidden="true" /></a>
+          <a className="sl-text-link" href="#platform">Why it's different</a>
         </div>
       </div>
       <figure className="sl-hero-image-wrap">
@@ -90,17 +90,15 @@ function Hero() {
           height={1104}
           fetchPriority="high"
         />
-        <figcaption className="sl-image-caption"><span>From source to storefront</span><span>One connected journey</span></figcaption>
       </figure>
-      <a className="sl-scroll-cue" href="#platform" aria-label="Scroll to the platform section"><ArrowDown aria-hidden="true" /></a>
     </section>
   );
 }
 
-function SectionIntro({ number, label, title, body }: { number: string; label: string; title: string; body: string }) {
+function SectionIntro({ label, title, body }: { label: string; title: string; body: string }) {
   return (
     <div className="sl-section-intro">
-      <p className="sl-section-label"><span>{number}</span>{label}</p>
+      <p className="sl-section-label">{label}</p>
       <h2>{title}</h2>
       <p className="sl-section-body">{body}</p>
     </div>
@@ -109,45 +107,24 @@ function SectionIntro({ number, label, title, body }: { number: string; label: s
 
 function PlatformSection() {
   const capabilities = [
-    {
-      icon: MapPin,
-      number: "01",
-      title: "Find the right source",
-      body: "Discover storage centres, distributors and vendors, then see what produce is available across the network.",
-    },
-    {
-      icon: Boxes,
-      number: "02",
-      title: "Keep stock in view",
-      body: "Give each business a clearer picture of its incoming, available and moving inventory, batch by batch.",
-    },
-    {
-      icon: ScanLine,
-      number: "03",
-      title: "Protect freshness",
-      body: "Use produce and storage information to flag batches that may need attention and help teams act sooner.",
-    },
-    {
-      icon: RouteIcon,
-      number: "04",
-      title: "Coordinate each handoff",
-      body: "Bring order details, dispatch and delivery updates into one connected flow from one business to the next.",
-    },
+    { icon: MapPin, title: "Nearest stock, instantly", body: "See which storage centre near you has the produce right now." },
+    { icon: RouteIcon, title: "A rider, on demand", body: "Book pickup in a tap. The closest dispatch rider takes the job." },
+    { icon: ScanLine, title: "Live tracking", body: "Watch the delivery move, from the store to your door." },
+    { icon: Boxes, title: "Stock that updates itself", body: "Every pickup and drop changes inventory for everyone automatically." },
   ];
 
   return (
     <section className="sl-platform sl-section" id="platform" aria-labelledby="platform-title">
       <div className="sl-container">
         <SectionIntro
-          number="01"
-          label="The platform"
-          title="Less guesswork between every handoff."
-          body="ShelfLife brings discovery, inventory, freshness and delivery into one shared view, so every part of the produce journey is easier to follow."
+          label="Why it's different"
+          title="Farm-to-buyer sites sell food. We move it."
+          body="Marketplaces list produce and leave delivery to you. ShelfLife is the network underneath: stores, stock and riders working like one app."
         />
         <div className="sl-capabilities">
-          {capabilities.map(({ icon: Icon, number, title, body }) => (
-            <article className="sl-capability" key={number}>
-              <div className="sl-capability-top"><span>{number}</span><Icon aria-hidden="true" /></div>
+          {capabilities.map(({ icon: Icon, title, body }) => (
+            <article className="sl-capability" key={title}>
+              <div className="sl-capability-top"><Icon aria-hidden="true" /></div>
               <h3>{title}</h3>
               <p>{body}</p>
             </article>
@@ -155,7 +132,7 @@ function PlatformSection() {
         </div>
         <div className="sl-platform-note">
           <span className="sl-note-mark"><PackageCheck aria-hidden="true" /></span>
-          <p><strong>Every business has its own view.</strong> Shared records help stock stay connected as it moves through the supply chain.</p>
+          <p><strong>Think ride-hailing, but for crates.</strong> You ask, the network finds stock and a rider, and it shows up.</p>
           <a href="#network" aria-label="See who ShelfLife connects"><ArrowRight aria-hidden="true" /></a>
         </div>
       </div>
@@ -165,10 +142,10 @@ function PlatformSection() {
 
 function JourneySection() {
   const steps = [
-    { number: "01", title: "Discover", body: "Find available produce and the businesses behind it." },
-    { number: "02", title: "Manage", body: "Keep quantities and batches visible as stock changes hands." },
-    { number: "03", title: "Coordinate", body: "Connect orders with pickup and delivery details." },
-    { number: "04", title: "Deliver", body: "Track progress through to the final handoff." },
+    { title: "Request", body: "Say what you need and where." },
+    { title: "Match", body: "ShelfLife finds the closest stock." },
+    { title: "Dispatch", body: "A nearby rider picks it up." },
+    { title: "Track", body: "Follow it live until it arrives." },
   ];
 
   return (
@@ -176,17 +153,15 @@ function JourneySection() {
       <div className="sl-container">
         <div className="sl-journey-heading">
           <SectionIntro
-            number="02"
             label="How it works"
-            title="One journey. Every step connected."
-            body="From finding the right supplier to confirming a delivery, ShelfLife helps each participant work from a clearer picture."
+            title="Four taps. Produce on the move."
+            body="The same simple flow you know from ride apps."
           />
           <span className="sl-journey-symbol" aria-hidden="true"><Warehouse /><span>→</span><RouteIcon /><span>→</span><PackageCheck /></span>
         </div>
         <div className="sl-steps">
           {steps.map((step) => (
-            <article className="sl-step" key={step.number}>
-              <span className="sl-step-number">{step.number}</span>
+            <article className="sl-step" key={step.title}>
               <h3>{step.title}</h3>
               <p>{step.body}</p>
             </article>
@@ -199,11 +174,11 @@ function JourneySection() {
 
 function NetworkSection() {
   const members = [
-    { number: "01", role: "Storage centres", detail: "Track stored produce, stock movement and freshness." },
-    { number: "02", role: "Distributors", detail: "Source, manage and supply produce across the network." },
-    { number: "03", role: "Vendors", detail: "Manage stock received, sales and products nearing spoilage." },
-    { number: "04", role: "Dispatch riders", detail: "Receive delivery requests and share progress along the route." },
-    { number: "05", role: "Consumers", detail: "Discover vendors and order available produce." },
+    { role: "Storage centres", detail: "Fill empty space and get stock picked up fast." },
+    { role: "Distributors", detail: "Move bulk produce without owning a fleet." },
+    { role: "Vendors", detail: "Restock on demand instead of waiting days." },
+    { role: "Dispatch riders", detail: "Get nearby delivery jobs and earn per trip." },
+    { role: "Buyers", detail: "Order produce and see exactly where it is." },
   ];
 
   return (
@@ -211,16 +186,14 @@ function NetworkSection() {
       <div className="sl-container sl-network-layout">
         <div className="sl-network-heading">
           <SectionIntro
-            number="03"
-            label="The network"
-            title="Built around the people who move food forward."
-            body="A more connected supply chain starts by giving every participant the information they need to do their part."
+            label="Who's on the network"
+            title="Everyone who moves food, in one app."
+            body="Each side gets something simple out of it."
           />
         </div>
         <div className="sl-member-list">
           {members.map((member) => (
-            <article className="sl-member" key={member.number}>
-              <span className="sl-member-number">{member.number}</span>
+            <article className="sl-member" key={member.role}>
               <h3>{member.role}</h3>
               <p>{member.detail}</p>
               <ArrowRight className="sl-member-arrow" aria-hidden="true" />
@@ -236,11 +209,11 @@ function ClosingSection() {
   return (
     <section className="sl-closing" aria-labelledby="closing-title">
       <div className="sl-container sl-closing-inner">
-        <p className="sl-section-label"><span>04</span> A better-connected supply chain</p>
-        <h2 id="closing-title">Keep good produce<br /><em>moving forward.</em></h2>
-        <p>Discover produce, manage stock and coordinate deliveries with ShelfLife.</p>
+        <p className="sl-section-label">ShelfLife</p>
+        <h2 id="closing-title">Request produce.<br /><em>We'll move it.</em></h2>
+        <p>Stock, riders and tracking in one network.</p>
         <Button asChild className="sl-button sl-button-light">
-          <a href="#top">Back to the beginning <ArrowRight aria-hidden="true" /></a>
+          <a href="#top">Back to top <ArrowRight aria-hidden="true" /></a>
         </Button>
       </div>
     </section>
