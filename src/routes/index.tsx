@@ -44,7 +44,7 @@ function useScrollMotion() {
       raf = requestAnimationFrame(() => {
         document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((el) => {
           const r = el.parentElement!.getBoundingClientRect();
-          const speed = Number(el.dataset.parallax);
+          const speed = Number(el.dataset["parallax"]);
           el.style.transform = `translate3d(0, ${(r.top + r.height / 2 - window.innerHeight / 2) * speed}px, 0) scale(1.12)`;
         });
       });
