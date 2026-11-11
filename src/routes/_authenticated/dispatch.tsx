@@ -17,7 +17,7 @@ function Dispatch() {
   const navigate = useNavigate();
   const [pickup, setPickup] = useState<Place | null>(null);
   const [dropoff, setDropoff] = useState<Place | null>(null);
-  const [produce, setProduce] = useState(PRODUCE[0]);
+  const [produce, setProduce] = useState<string>(PRODUCE[0] ?? "Tomatoes");
   const [crates, setCrates] = useState(4);
   const [vehicle, setVehicle] = useState<VehicleId>("bike");
   const [busy, setBusy] = useState(false);
@@ -27,7 +27,7 @@ function Dispatch() {
   const chosen = quotes.find((q) => q.v.id === vehicle)!;
 
   function locate() {
-    if (!navigator.geolocation) return toast.error("Location not available on this device");
+    if (!navigator.geolocation) { toast.error("Location not available on this device"); return; }
     navigator.geolocation.getCurrentPosition(
       (p) => setPickup({ id: "me", name: "My location", area: "Current position", lat: p.coords.latitude, lng: p.coords.longitude }),
       () => toast.error("Allow location access to use this"),
@@ -40,7 +40,7 @@ function Dispatch() {
 
   async function request() {
     if (!pickup || !dropoff) return;
-    if (!chosen.fits) return toast.error(`${chosen.v.name} takes up to ${chosen.v.maxCrates} crates`);
+    if (!chosen.fits) { toast.error(`${chosen.v.name} takes up to ${chosen.v.maxCrates} crates`); return; }
     setBusy(true);
     const { data: u } = await supabase.auth.getUser();
     const { data, error } = await supabase.from("trips").insert({
@@ -50,7 +50,7 @@ function Dispatch() {
       produce, crates, vehicle, distance_km: km, price_ngn: chosen.price,
     }).select("id").single();
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     navigate({ to: "/trips/$id", params: { id: data.id } });
   }
 

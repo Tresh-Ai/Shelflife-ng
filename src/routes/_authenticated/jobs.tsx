@@ -27,10 +27,10 @@ function Jobs() {
 
   async function accept(id: string) {
     const { data: rows, error } = await supabase.from("trips")
-      .update({ hauler_id: me, status: "accepted" })
+      .update({ hauler_id: me ?? null, status: "accepted" })
       .eq("id", id).eq("status", "searching").is("hauler_id", null).select("id");
-    if (error) return toast.error(error.message);
-    if (!rows?.length) return toast.error("Another hauler took this job");
+    if (error) { toast.error(error.message); return; }
+    if (!rows?.length) { toast.error("Another hauler took this job"); return; }
     navigate({ to: "/trips/$id", params: { id } });
   }
 

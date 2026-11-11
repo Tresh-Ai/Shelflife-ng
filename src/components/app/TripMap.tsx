@@ -52,7 +52,7 @@ export function TripMap({ pickup, dropoff, hauler, className }: Props) {
       mod.polyline([[pickup.lat, pickup.lng], [dropoff.lat, dropoff.lng]], { color: "#111", weight: 4, dashArray: "1 8", lineCap: "round" }).addTo(layer.current);
     }
     if (hauler) add(hauler, dot("#ea580c", "H"));
-    if (pts.length === 1) map.current.setView(pts[0], 13);
+    if (pts.length === 1) map.current.setView(pts[0]!, 13);
     else if (pts.length > 1) map.current.fitBounds(pts, { padding: [60, 60] });
   }
 
