@@ -14,7 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          mode: string
+          vehicle: string | null
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id: string
+          mode?: string
+          vehicle?: string | null
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          mode?: string
+          vehicle?: string | null
+        }
+        Relationships: []
+      }
+      trips: {
+        Row: {
+          buyer_id: string
+          crates: number
+          created_at: string
+          distance_km: number
+          dropoff_lat: number
+          dropoff_lng: number
+          dropoff_name: string
+          hauler_id: string | null
+          hauler_lat: number | null
+          hauler_lng: number | null
+          id: string
+          pickup_lat: number
+          pickup_lng: number
+          pickup_name: string
+          price_ngn: number
+          produce: string
+          status: string
+          updated_at: string
+          vehicle: string
+        }
+        Insert: {
+          buyer_id: string
+          crates: number
+          created_at?: string
+          distance_km: number
+          dropoff_lat: number
+          dropoff_lng: number
+          dropoff_name: string
+          hauler_id?: string | null
+          hauler_lat?: number | null
+          hauler_lng?: number | null
+          id?: string
+          pickup_lat: number
+          pickup_lng: number
+          pickup_name: string
+          price_ngn: number
+          produce: string
+          status?: string
+          updated_at?: string
+          vehicle: string
+        }
+        Update: {
+          buyer_id?: string
+          crates?: number
+          created_at?: string
+          distance_km?: number
+          dropoff_lat?: number
+          dropoff_lng?: number
+          dropoff_name?: string
+          hauler_id?: string | null
+          hauler_lat?: number | null
+          hauler_lng?: number | null
+          id?: string
+          pickup_lat?: number
+          pickup_lng?: number
+          pickup_name?: string
+          price_ngn?: number
+          produce?: string
+          status?: string
+          updated_at?: string
+          vehicle?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
