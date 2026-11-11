@@ -30,4 +30,5 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Project architecture
-- Keep ShelfLife as a single-page experience in the existing TanStack route and shared stylesheet, with reusable narrative components and semantic tokens to keep the product story consistent without duplicating page structure.
+- ShelfLife is a mobile-first dispatch web app: signed-in screens live under the `_authenticated` layout with a bottom tab bar; pricing/vehicle rules stay pure in `src/lib/dispatch.ts` so they are testable.
+- Trips are read and written from the browser client under RLS, with realtime invalidation; the map is Leaflet loaded inside an effect so SSR never imports it.
