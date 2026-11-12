@@ -8,6 +8,13 @@
       "when": 1794410333402,
       "tag": "0000_dispatch_core",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794462173317,
+      "tag": "0001_roles_markets_products_orders",
+      "breakpoints": true
     }
   ]
 }
