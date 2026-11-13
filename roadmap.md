@@ -1,1 +1,6 @@
 - [x] Hauler dispatch MVP: sign in, request a hauler on a real map, haulers accept, live tracking, bottom nav app.
+- [x] Roles at sign-up (buy / drive / sell + seller type), role-based tabs, switch role in Account
+- [x] Bulk shop with Nigerian farm stock, basket, checkout that reduces stock
+- [x] Seller stock page with "Connect your inventory system, coming soon"
+- [ ] Admin page (waiting on the admin email)
+- [ ] Pick market on a map; draggable booking panel
