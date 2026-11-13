@@ -35,7 +35,7 @@ function Sell() {
       seller_id: me!, name: f.name, category: f.category, unit: f.unit, market_id: f.market,
       price_ngn: Math.round(Number(f.price)), quantity: Math.round(Number(f.qty)),
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Listed"); setF({ ...f, name: "", price: "", qty: "" }); refresh();
   }
   async function setQty(id: string, quantity: number) {
