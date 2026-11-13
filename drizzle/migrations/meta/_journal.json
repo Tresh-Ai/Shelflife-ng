@@ -15,6 +15,13 @@
       "when": 1794462173317,
       "tag": "0001_roles_markets_products_orders",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794589664902,
+      "tag": "0002_starter_store_stock",
+      "breakpoints": true
     }
   ]
 }
