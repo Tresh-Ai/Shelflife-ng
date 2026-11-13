@@ -4,6 +4,7 @@ import { Truck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { ROLES, SELLER_TYPES, type Role, type SellerType } from "@/lib/catalog";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — ShelfLife" }, { name: "description", content: "Sign in to book or drive produce deliveries." }] }),
@@ -18,10 +19,12 @@ function AuthPage() {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const [role, setRole] = useState<Role>("buyer");
+  const [sellerType, setSellerType] = useState<SellerType>("farmer");
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => data.session && navigate({ to: "/dispatch", replace: true }));
-    const { data } = supabase.auth.onAuthStateChange((_e, s) => s && navigate({ to: "/dispatch", replace: true }));
+    supabase.auth.getSession().then(({ data }) => data.session && navigate({ to: "/shop", replace: true }));
+    const { data } = supabase.auth.onAuthStateChange((_e, s) => s && navigate({ to: "/shop", replace: true }));
     return () => data.subscription.unsubscribe();
   }, [navigate]);
 
@@ -34,7 +37,7 @@ function AuthPage() {
     } else {
       const { data, error } = await supabase.auth.signUp({
         email, password,
-        options: { emailRedirectTo: window.location.origin, data: { full_name: name } },
+        options: { emailRedirectTo: window.location.origin, data: { full_name: name, mode: role, seller_type: role === "seller" ? sellerType : null } },
       });
       if (error) toast.error(error.message);
       else if (!data.session) setSent(true);
@@ -64,7 +67,30 @@ function AuthPage() {
         <>
           <h1 className="mt-14 text-3xl font-extrabold tracking-tight">{mode === "in" ? "Welcome back" : "Create your account"}</h1>
           <form onSubmit={submit} className="mt-8 space-y-3">
-            {mode === "up" && <input className={input} placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />}
+            {mode === "up" && (
+              <>
+                <p className="text-sm font-bold">I want to</p>
+                <div className="grid gap-2">
+                  {ROLES.map((r) => (
+                    <button type="button" key={r.id} onClick={() => setRole(r.id)} aria-pressed={role === r.id}
+                      className={"rounded-xl border-2 p-3 text-left " + (role === r.id ? "border-primary bg-primary/5" : "border-border")}>
+                      <span className="block font-bold">{r.title}</span><span className="text-sm text-muted-foreground">{r.note}</span>
+                    </button>
+                  ))}
+                </div>
+                {role === "seller" && (
+                  <div className="grid grid-cols-2 gap-2">
+                    {SELLER_TYPES.map((t) => (
+                      <button type="button" key={t.id} onClick={() => setSellerType(t.id)} aria-pressed={sellerType === t.id}
+                        className={"rounded-xl border-2 p-2.5 text-left text-sm " + (sellerType === t.id ? "border-primary bg-primary/5" : "border-border")}>
+                        <span className="block font-bold">{t.title}</span><span className="text-xs text-muted-foreground">{t.note}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <input className={input} placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
+              </>
+            )}
             <input className={input} type="email" placeholder="Email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <input className={input} type="password" placeholder="Password" minLength={6} autoComplete={mode === "in" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} required />
             <button disabled={busy} className="h-14 w-full rounded-xl bg-primary text-base font-bold text-primary-foreground disabled:opacity-60">

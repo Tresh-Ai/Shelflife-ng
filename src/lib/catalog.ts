@@ -5,11 +5,12 @@ import vegetables from "@/assets/produce-vegetables.jpg";
 import grains from "@/assets/produce-grains.jpg";
 
 export const CATEGORIES = [
-  { id: "Tomatoes", image: tomatoes },
+  { id: "Tomatoes", image: tomatoes, label: "Tomatoes & peppers" },
   { id: "Vegetables", image: vegetables },
   { id: "Fruits", image: fruits },
   { id: "Tubers", image: tubers },
   { id: "Grains", image: grains },
+  { id: "Oils & spices", image: grains },
 ] as const;
 export type Category = (typeof CATEGORIES)[number]["id"];
 
