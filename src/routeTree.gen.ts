@@ -13,8 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedDispatchRouteImport } from './routes/_authenticated/dispatch'
 import { Route as AuthenticatedJobsRouteImport } from './routes/_authenticated/jobs'
+import { Route as AuthenticatedSellRouteImport } from './routes/_authenticated/sell'
+import { Route as AuthenticatedShopRouteImport } from './routes/_authenticated/shop'
 import { Route as AuthenticatedTripsRouteImport } from './routes/_authenticated/trips'
 import { Route as AuthenticatedTripsIdRouteImport } from './routes/_authenticated/trips.$id'
 
@@ -37,6 +40,11 @@ const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDispatchRoute = AuthenticatedDispatchRouteImport.update({
   id: '/dispatch',
   path: '/dispatch',
@@ -45,6 +53,16 @@ const AuthenticatedDispatchRoute = AuthenticatedDispatchRouteImport.update({
 const AuthenticatedJobsRoute = AuthenticatedJobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSellRoute = AuthenticatedSellRouteImport.update({
+  id: '/sell',
+  path: '/sell',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedShopRoute = AuthenticatedShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedTripsRoute = AuthenticatedTripsRouteImport.update({
@@ -62,8 +80,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/cart': typeof AuthenticatedCartRoute
   '/dispatch': typeof AuthenticatedDispatchRoute
   '/jobs': typeof AuthenticatedJobsRoute
+  '/sell': typeof AuthenticatedSellRoute
+  '/shop': typeof AuthenticatedShopRoute
   '/trips': typeof AuthenticatedTripsRouteWithChildren
   '/trips/$id': typeof AuthenticatedTripsIdRoute
 }
@@ -71,8 +92,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/cart': typeof AuthenticatedCartRoute
   '/dispatch': typeof AuthenticatedDispatchRoute
   '/jobs': typeof AuthenticatedJobsRoute
+  '/sell': typeof AuthenticatedSellRoute
+  '/shop': typeof AuthenticatedShopRoute
   '/trips': typeof AuthenticatedTripsRouteWithChildren
   '/trips/$id': typeof AuthenticatedTripsIdRoute
 }
@@ -82,26 +106,50 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/dispatch': typeof AuthenticatedDispatchRoute
   '/_authenticated/jobs': typeof AuthenticatedJobsRoute
+  '/_authenticated/sell': typeof AuthenticatedSellRoute
+  '/_authenticated/shop': typeof AuthenticatedShopRoute
   '/_authenticated/trips': typeof AuthenticatedTripsRouteWithChildren
   '/_authenticated/trips/$id': typeof AuthenticatedTripsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/account' | '/dispatch' | '/jobs' | '/trips' | '/trips/$id'
+    | '/'
+    | '/auth'
+    | '/account'
+    | '/cart'
+    | '/dispatch'
+    | '/jobs'
+    | '/sell'
+    | '/shop'
+    | '/trips'
+    | '/trips/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/auth' | '/account' | '/dispatch' | '/jobs' | '/trips' | '/trips/$id'
+    | '/'
+    | '/auth'
+    | '/account'
+    | '/cart'
+    | '/dispatch'
+    | '/jobs'
+    | '/sell'
+    | '/shop'
+    | '/trips'
+    | '/trips/$id'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/account'
+    | '/_authenticated/cart'
     | '/_authenticated/dispatch'
     | '/_authenticated/jobs'
+    | '/_authenticated/sell'
+    | '/_authenticated/shop'
     | '/_authenticated/trips'
     | '/_authenticated/trips/$id'
   fileRoutesById: FileRoutesById
@@ -142,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/cart': {
+      id: '/_authenticated/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof AuthenticatedCartRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dispatch': {
       id: '/_authenticated/dispatch'
       path: '/dispatch'
@@ -154,6 +209,20 @@ declare module '@tanstack/react-router' {
       path: '/jobs'
       fullPath: '/jobs'
       preLoaderRoute: typeof AuthenticatedJobsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sell': {
+      id: '/_authenticated/sell'
+      path: '/sell'
+      fullPath: '/sell'
+      preLoaderRoute: typeof AuthenticatedSellRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/shop': {
+      id: '/_authenticated/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof AuthenticatedShopRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/trips': {
@@ -186,15 +255,21 @@ const AuthenticatedTripsRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedDispatchRoute: typeof AuthenticatedDispatchRoute
   AuthenticatedJobsRoute: typeof AuthenticatedJobsRoute
+  AuthenticatedSellRoute: typeof AuthenticatedSellRoute
+  AuthenticatedShopRoute: typeof AuthenticatedShopRoute
   AuthenticatedTripsRoute: typeof AuthenticatedTripsRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedDispatchRoute: AuthenticatedDispatchRoute,
   AuthenticatedJobsRoute: AuthenticatedJobsRoute,
+  AuthenticatedSellRoute: AuthenticatedSellRoute,
+  AuthenticatedShopRoute: AuthenticatedShopRoute,
   AuthenticatedTripsRoute: AuthenticatedTripsRouteWithChildren,
 }
 
