@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Minus, Plus, Search, ShoppingBasket } from "lucide-react";
@@ -36,8 +38,9 @@ function Shop() {
 
   return (
     <main className="px-4 pt-6">
-      <h1 className="text-3xl font-extrabold tracking-tight">Shop</h1>
-      <p className="text-sm text-muted-foreground">Buy in bulk. Add as many items as you need.</p>
+      <Link to="/dispatch" className="inline-flex items-center gap-1 text-sm font-bold text-muted-foreground"><ArrowLeft className="size-4" />Back to request</Link>
+      <h1 className="mt-2 text-3xl font-extrabold tracking-tight">Pick produce</h1>
+      <p className="text-sm text-muted-foreground">Add what you need from one market. We deliver it in one trip.</p>
       <div className="mt-4 flex gap-2">
         <label className="flex h-11 flex-1 items-center gap-2 rounded-xl bg-muted px-3">
           <Search className="size-4 text-muted-foreground" />
@@ -59,8 +62,8 @@ function Shop() {
         {list.length === 0 && <li className="col-span-2 py-16 text-center text-muted-foreground">Nothing matches yet.</li>}
       </ul>
       {count > 0 && (
-        <Link to="/cart" className="fixed inset-x-4 bottom-20 z-[1001] mx-auto flex h-14 max-w-md items-center justify-between rounded-2xl bg-primary px-5 font-bold text-primary-foreground shadow-lg">
-          <span className="flex items-center gap-2"><ShoppingBasket className="size-5" />{count} in basket</span>
+        <Link to="/dispatch" className="fixed inset-x-4 bottom-20 z-[1001] mx-auto flex h-14 max-w-md items-center justify-between rounded-2xl bg-primary px-5 font-bold text-primary-foreground shadow-lg">
+          <span className="flex items-center gap-2"><ShoppingBasket className="size-5" />{count} in basket · Continue</span>
           <span>{naira(cartTotal(cart.lines))}</span>
         </Link>
       )}
@@ -74,7 +77,7 @@ function Item({ p, market }: { p: Product; market: string }) {
   const qty = cart.lines.find((l) => l.product_id === p.id)?.qty ?? 0;
   const { quantity: _s, ...line } = p;
   void _s;
-  const set = (n: number) => cart.set({ ...line, product_id: p.id }, n, p.quantity);
+  const set = (n: number) => { if (n > 0 && cart.lines.some((l) => l.market_id !== p.market_id)) { toast.error("One market per delivery. Finish this basket first."); return; } cart.set({ ...line, product_id: p.id }, n, p.quantity) };
   return (
     <li className="overflow-hidden rounded-2xl border bg-card">
       <img src={img} alt={p.name} className="aspect-[4/3] w-full object-cover" loading="lazy" />

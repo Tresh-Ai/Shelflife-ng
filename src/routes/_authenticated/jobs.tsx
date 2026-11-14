@@ -55,7 +55,7 @@ function Jobs() {
                 <span className="text-xl font-extrabold tabular-nums">{naira(t.price_ngn)}</span>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                {t.crates} crates {t.produce.toLowerCase()} · {VEHICLES.find((v) => v.id === t.vehicle)?.name} · {t.distance_km} km
+                {t.produce} · {VEHICLES.find((v) => v.id === t.vehicle)?.name} · {t.distance_km} km
               </p>
               <button onClick={() => accept(t.id)} className="mt-4 h-12 w-full rounded-xl bg-primary font-bold text-primary-foreground">Accept job</button>
             </li>

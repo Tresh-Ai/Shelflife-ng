@@ -131,6 +131,7 @@ export type Database = {
           id: string
           market_id: string | null
           mode: string
+          onboarded: boolean
           phone: string | null
           seller_type: string | null
           vehicle: string | null
@@ -141,6 +142,7 @@ export type Database = {
           id: string
           market_id?: string | null
           mode?: string
+          onboarded?: boolean
           phone?: string | null
           seller_type?: string | null
           vehicle?: string | null
@@ -151,6 +153,7 @@ export type Database = {
           id?: string
           market_id?: string | null
           mode?: string
+          onboarded?: boolean
           phone?: string | null
           seller_type?: string | null
           vehicle?: string | null
@@ -166,10 +169,12 @@ export type Database = {
           dropoff_lat: number
           dropoff_lng: number
           dropoff_name: string
+          goods_ngn: number
           hauler_id: string | null
           hauler_lat: number | null
           hauler_lng: number | null
           id: string
+          order_ids: string[]
           pickup_lat: number
           pickup_lng: number
           pickup_name: string
@@ -187,10 +192,12 @@ export type Database = {
           dropoff_lat: number
           dropoff_lng: number
           dropoff_name: string
+          goods_ngn?: number
           hauler_id?: string | null
           hauler_lat?: number | null
           hauler_lng?: number | null
           id?: string
+          order_ids?: string[]
           pickup_lat: number
           pickup_lng: number
           pickup_name: string
@@ -208,10 +215,12 @@ export type Database = {
           dropoff_lat?: number
           dropoff_lng?: number
           dropoff_name?: string
+          goods_ngn?: number
           hauler_id?: string | null
           hauler_lat?: number | null
           hauler_lng?: number | null
           id?: string
+          order_ids?: string[]
           pickup_lat?: number
           pickup_lng?: number
           pickup_name?: string

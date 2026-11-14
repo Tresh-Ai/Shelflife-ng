@@ -1,4 +1,5 @@
-import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect, useLocation, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { MapPin, ListOrdered, Truck, User, Store, Package } from "lucide-react";
 import { useProfile } from "@/lib/shop";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,14 +23,19 @@ const T = {
   account: { to: "/account", label: "Account", icon: User },
 } as const;
 const BY_ROLE = {
-  buyer: [T.shop, T.request, T.trips, T.account],
-  driver: [T.drive, T.shop, T.request, T.trips, T.account],
-  seller: [T.sell, T.shop, T.request, T.trips, T.account],
+  buyer: [T.request, T.trips, T.account],
+  driver: [T.drive, T.request, T.trips, T.account],
+  seller: [T.sell, T.request, T.trips, T.account],
 };
 
 function Shell() {
   const { data: p } = useProfile();
   const tabs = BY_ROLE[p?.mode ?? "buyer"];
+  const path = useLocation({ select: (l) => l.pathname });
+  const navigate = useNavigate();
+  const onboarding = path === "/onboarding";
+  useEffect(() => { if (p && !p.onboarded && !onboarding) navigate({ to: "/onboarding", replace: true }); }, [p, onboarding, navigate]);
+  if (onboarding || (p && !p.onboarded)) return <div className="mx-auto min-h-dvh max-w-lg bg-background"><Outlet /></div>;
   return (
     <div className="mx-auto flex min-h-dvh max-w-lg flex-col bg-background">
       <div className="flex-1 pb-20"><Outlet /></div>

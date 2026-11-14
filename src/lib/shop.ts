@@ -14,7 +14,7 @@ export function useProfile() {
         supabase.from("profiles").select("*").eq("id", me!).maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", me!),
       ]);
-      return { ...p, id: me!, mode: (p?.mode ?? "buyer") as "buyer" | "driver" | "seller", isAdmin: !!r?.some((x) => x.role === "admin") };
+      return { ...p, id: me!, mode: (p?.mode ?? "buyer") as "buyer" | "driver" | "seller", isAdmin: !!r?.some((x) => x.role === "admin"), onboarded: p?.onboarded ?? true };
     },
   });
 }
@@ -61,4 +61,8 @@ export function useCart() {
     set: (line: Omit<CartLine, "qty">, qty: number, stock: number) => write(setLineQty(read(), line, qty, stock)),
     clear: () => write([]),
   };
+}
+
+export function homeFor(role: "buyer" | "driver" | "seller") {
+  return role === "driver" ? "/jobs" : role === "seller" ? "/sell" : "/dispatch";
 }

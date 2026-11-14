@@ -16,6 +16,7 @@ import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedDispatchRouteImport } from './routes/_authenticated/dispatch'
 import { Route as AuthenticatedJobsRouteImport } from './routes/_authenticated/jobs'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedSellRouteImport } from './routes/_authenticated/sell'
 import { Route as AuthenticatedShopRouteImport } from './routes/_authenticated/shop'
 import { Route as AuthenticatedTripsRouteImport } from './routes/_authenticated/trips'
@@ -55,6 +56,11 @@ const AuthenticatedJobsRoute = AuthenticatedJobsRouteImport.update({
   path: '/jobs',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSellRoute = AuthenticatedSellRouteImport.update({
   id: '/sell',
   path: '/sell',
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof AuthenticatedCartRoute
   '/dispatch': typeof AuthenticatedDispatchRoute
   '/jobs': typeof AuthenticatedJobsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/sell': typeof AuthenticatedSellRoute
   '/shop': typeof AuthenticatedShopRoute
   '/trips': typeof AuthenticatedTripsRouteWithChildren
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/cart': typeof AuthenticatedCartRoute
   '/dispatch': typeof AuthenticatedDispatchRoute
   '/jobs': typeof AuthenticatedJobsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/sell': typeof AuthenticatedSellRoute
   '/shop': typeof AuthenticatedShopRoute
   '/trips': typeof AuthenticatedTripsRouteWithChildren
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/dispatch': typeof AuthenticatedDispatchRoute
   '/_authenticated/jobs': typeof AuthenticatedJobsRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/sell': typeof AuthenticatedSellRoute
   '/_authenticated/shop': typeof AuthenticatedShopRoute
   '/_authenticated/trips': typeof AuthenticatedTripsRouteWithChildren
@@ -123,6 +132,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/dispatch'
     | '/jobs'
+    | '/onboarding'
     | '/sell'
     | '/shop'
     | '/trips'
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/dispatch'
     | '/jobs'
+    | '/onboarding'
     | '/sell'
     | '/shop'
     | '/trips'
@@ -148,6 +159,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cart'
     | '/_authenticated/dispatch'
     | '/_authenticated/jobs'
+    | '/_authenticated/onboarding'
     | '/_authenticated/sell'
     | '/_authenticated/shop'
     | '/_authenticated/trips'
@@ -211,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedJobsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/sell': {
       id: '/_authenticated/sell'
       path: '/sell'
@@ -258,6 +277,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedDispatchRoute: typeof AuthenticatedDispatchRoute
   AuthenticatedJobsRoute: typeof AuthenticatedJobsRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedSellRoute: typeof AuthenticatedSellRoute
   AuthenticatedShopRoute: typeof AuthenticatedShopRoute
   AuthenticatedTripsRoute: typeof AuthenticatedTripsRouteWithChildren
@@ -268,6 +288,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedDispatchRoute: AuthenticatedDispatchRoute,
   AuthenticatedJobsRoute: AuthenticatedJobsRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedSellRoute: AuthenticatedSellRoute,
   AuthenticatedShopRoute: AuthenticatedShopRoute,
   AuthenticatedTripsRoute: AuthenticatedTripsRouteWithChildren,
