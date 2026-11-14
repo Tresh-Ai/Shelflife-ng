@@ -31,8 +31,8 @@ function Account() {
   async function save() {
     const { error } = await supabase.from("profiles").update({
       full_name: name, phone,
-      vehicle: p!.mode === "driver" ? vehicle : p!.vehicle,
-      market_id: p!.mode === "seller" ? market || null : p!.market_id,
+      vehicle: p!.mode === "driver" ? vehicle : p!.vehicle ?? null,
+      market_id: p!.mode === "seller" ? market || null : p!.market_id ?? null,
     }).eq("id", p!.id);
     if (error) toast.error(error.message); else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["profile"] }); }
   }
