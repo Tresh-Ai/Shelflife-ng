@@ -97,7 +97,7 @@ function TripPage() {
         <dl className="mt-5 space-y-3 text-[15px]">
           <Row k="Pickup" v={trip.pickup_name} />
           <Row k="Drop-off" v={trip.dropoff_name} />
-          <Row k="Load" v={`${trip.crates} crates · ${trip.produce}`} />
+          <Row k="Load" v={trip.produce} />
           <Row k="Vehicle" v={vehicle?.name ?? trip.vehicle} />
           <Row k="Price" v={naira(trip.price_ngn)} bold />
         </dl>

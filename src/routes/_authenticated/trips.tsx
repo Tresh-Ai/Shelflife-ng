@@ -46,7 +46,7 @@ function TripList() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-bold">{t.pickup_name} → {t.dropoff_name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {t.hauler_id === me ? "Driving · " : ""}{STATUS_LABEL[t.status]} · {t.crates} crates {t.produce.toLowerCase()}
+                    {t.hauler_id === me ? "Driving · " : ""}{STATUS_LABEL[t.status]} · {t.produce}
                   </p>
                 </div>
                 <span className="font-extrabold tabular-nums">{naira(t.price_ngn)}</span>
