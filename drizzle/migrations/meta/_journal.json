@@ -1,34 +1,5 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1794410333402,
-      "tag": "0000_dispatch_core",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1794462173317,
-      "tag": "0001_roles_markets_products_orders",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1794589664902,
-      "tag": "0002_starter_store_stock",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1794679463660,
-      "tag": "0003_role_onboarding_order_trips",
-      "breakpoints": true
-    }
-  ]
+  "entries": []
 }
