@@ -1,5 +1,20 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1795005232694,
+      "tag": "0000_admin_access_contacts_and_realtime",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795005253499,
+      "tag": "0001_driver_sees_order_parties",
+      "breakpoints": true
+    }
+  ]
 }

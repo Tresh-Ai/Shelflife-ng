@@ -1,8 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSyncExternalStore } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserId } from "@/lib/trips";
 import { categoryImage, setLineQty, type CartLine } from "@/lib/catalog";
+
+/** Keep stock and orders live: new listings, sold stock and placed orders appear without a refresh. */
+export function useCatalogRealtime() {
+  const qc = useQueryClient();
+  useEffect(() => {
+    const ch = supabase
+      .channel(`catalog-${Math.random().toString(36).slice(2)}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "products" }, () => qc.invalidateQueries({ queryKey: ["products"] }))
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => qc.invalidateQueries({ queryKey: ["orders"] }))
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [qc]);
+}
 
 export function useProfile() {
   const me = useUserId();

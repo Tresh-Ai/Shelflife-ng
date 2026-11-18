@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Bike, Truck, Snowflake, LocateFixed, ShoppingBasket, ChevronRight, ArrowLeft, Wallet } from "lucide-react";
+import { Bike, Truck, Snowflake, ShoppingBasket, ChevronRight, ArrowLeft, Wallet, Search } from "lucide-react";
 import { toast } from "sonner";
 import { TripMap } from "@/components/app/TripMap";
+import { PlacePicker } from "@/components/app/PlacePicker";
 import { HUBS, VEHICLES, distanceKm, quote, naira, type Place, type VehicleId } from "@/lib/dispatch";
 import { cartTotal } from "@/lib/catalog";
 import { useCart, useMarkets, useProfile } from "@/lib/shop";
@@ -27,6 +28,7 @@ function Dispatch() {
   const [vehicle, setVehicle] = useState<VehicleId>("bike");
   const [step, setStep] = useState<"plan" | "pay">("plan");
   const [busy, setBusy] = useState(false);
+  const [picking, setPicking] = useState<"pickup" | "dropoff" | null>(null);
 
   const hasBasket = cart.lines.length > 0;
   const market = hasBasket ? markets?.find((m) => m.id === cart.lines[0]!.market_id) : undefined;
@@ -34,19 +36,14 @@ function Dispatch() {
   const goods = cartTotal(cart.lines);
   const count = cart.lines.reduce((s, l) => s + l.qty, 0);
 
+  const marketPlaces: Place[] = (markets ?? []).map((m) => ({ id: m.id, name: m.name, area: m.area, lat: m.lat, lng: m.lng }));
+  const hubPlaces: Place[] = HUBS.filter((h) => !marketPlaces.some((m) => m.id === h.id));
+
   const km = pickup && dropoff ? distanceKm(pickup, dropoff) : 0;
   const quotes = useMemo(() => VEHICLES.map((v) => ({ v, ...quote(v, km, 1) })), [km]);
   const chosen = quotes.find((q) => q.v.id === vehicle)!;
   const ready = !!pickup && !!dropoff && pickup.id !== dropoff.id;
   const isSeller = me?.mode === "seller";
-
-  function locate(set: (p: Place) => void) {
-    if (!navigator.geolocation) { toast.error("Location not available on this device"); return; }
-    navigator.geolocation.getCurrentPosition(
-      (p) => set({ id: "me", name: "My location", area: "Current position", lat: p.coords.latitude, lng: p.coords.longitude }),
-      () => toast.error("Allow location access to use this"),
-    );
-  }
 
   async function confirm() {
     if (!pickup || !dropoff) return;
@@ -73,9 +70,7 @@ function Dispatch() {
     navigate({ to: "/trips/$id", params: { id: data.id } });
   }
 
-  const sel = "h-12 w-full appearance-none rounded-xl bg-muted pl-10 pr-12 text-[15px] font-semibold outline-none focus:ring-2 focus:ring-ring";
-  const fromLabel = isSeller ? "Your store or farm" : "Pick up from";
-  const toLabel = isSeller ? "Deliver to buyer" : "Deliver to";
+  const field = "flex h-12 w-full items-center gap-2 rounded-xl bg-muted px-4 text-[15px] font-semibold";
 
   if (step === "pay" && pickup && dropoff) {
     return (
@@ -126,32 +121,20 @@ function Dispatch() {
           <div className="relative">
             <span className="absolute top-1/2 left-4 size-2.5 -translate-y-1/2 rounded-full bg-foreground" />
             {hasBasket ? (
-              <div className={sel + " flex items-center"}>{pickup?.name ?? "Market"}<span className="ml-2 text-xs text-muted-foreground">market pickup</span></div>
-            ) : pickupSel?.id === "me" ? (
-              <div className={sel + " flex items-center"}>My location <button onClick={() => setPickup(null)} className="ml-auto text-xs text-muted-foreground underline">change</button></div>
+              <div className={field + " pl-10"}>{pickup?.name ?? "Market"}<span className="ml-auto text-xs text-muted-foreground">market pickup</span></div>
             ) : (
-              <>
-                <select aria-label={fromLabel} className={sel} value={pickupSel?.id ?? ""} onChange={(e) => setPickup(HUBS.find((h) => h.id === e.target.value) ?? null)}>
-                  <option value="">{fromLabel}</option>
-                  {HUBS.map((h) => <option key={h.id} value={h.id}>{h.name} · {h.area}</option>)}
-                </select>
-                <button onClick={() => locate(setPickup)} aria-label="Use my location" className="absolute top-1/2 right-2 grid size-8 -translate-y-1/2 place-items-center rounded-lg bg-card"><LocateFixed className="size-4" /></button>
-              </>
+              <button onClick={() => setPicking("pickup")} aria-label={isSeller ? "Your store or farm" : "Pick up from"} className={field + " pl-10 pr-4"}>
+                <span className="truncate">{pickupSel?.name ?? (isSeller ? "Your store or farm" : "Pick up from")}</span>
+                <Search className="ml-auto size-4 shrink-0 text-muted-foreground" />
+              </button>
             )}
           </div>
           <div className="relative">
             <span className="absolute top-1/2 left-4 size-2.5 -translate-y-1/2 rounded-[3px] bg-success" />
-            {dropoff?.id === "me" ? (
-              <div className={sel + " flex items-center"}>My location <button onClick={() => setDropoff(null)} className="ml-auto text-xs text-muted-foreground underline">change</button></div>
-            ) : (
-              <>
-                <select aria-label={toLabel} className={sel} value={dropoff?.id ?? ""} onChange={(e) => setDropoff(HUBS.find((h) => h.id === e.target.value) ?? null)}>
-                  <option value="">{toLabel}</option>
-                  {HUBS.map((h) => <option key={h.id} value={h.id}>{h.name} · {h.area}</option>)}
-                </select>
-                <button onClick={() => locate(setDropoff)} aria-label="Deliver to my location" className="absolute top-1/2 right-2 grid size-8 -translate-y-1/2 place-items-center rounded-lg bg-card"><LocateFixed className="size-4" /></button>
-              </>
-            )}
+            <button onClick={() => setPicking("dropoff")} aria-label={isSeller ? "Deliver to buyer" : "Deliver to"} className={field + " pl-10 pr-4"}>
+              <span className="truncate">{dropoff?.name ?? (isSeller ? "Deliver to buyer" : "Deliver to")}</span>
+              <Search className="ml-auto size-4 shrink-0 text-muted-foreground" />
+            </button>
           </div>
         </div>
 
@@ -180,6 +163,19 @@ function Dispatch() {
           {ready ? `Continue · ${naira(goods + chosen.price)}` : hasBasket ? "Choose where to deliver" : "Choose pickup and drop-off"}
         </button>
       </section>
+
+      {picking && (
+        <PlacePicker
+          title={picking === "pickup" ? (isSeller ? "Where is the stock?" : "Pick up from") : isSeller ? "Deliver to buyer" : "Deliver to"}
+          hubs={hubPlaces}
+          markets={marketPlaces}
+          onClose={() => setPicking(null)}
+          onPick={(p) => {
+            if (picking === "pickup") setPickup(p); else setDropoff(p);
+            setPicking(null);
+          }}
+        />
+      )}
     </div>
   );
 }

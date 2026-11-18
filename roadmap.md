@@ -2,5 +2,11 @@
 - [x] Roles at sign-up (buy / drive / sell + seller type), role-based tabs, switch role in Account
 - [x] Bulk shop with Nigerian farm stock, basket, checkout that reduces stock
 - [x] Seller stock page with "Connect your inventory system, coming soon"
-- [ ] Admin page (waiting on the admin email)
-- [ ] Pick market on a map; draggable booking panel
+- [x] Stop the onboarding bounce when a driver opens a trip
+- [x] Buyer, driver and seller can call each other on a trip or order
+- [x] Any pickup or drop-off: type an address or drop a pin, not just markets
+- [x] Admin page (treshtechcohort@gmail.com made admin)
+- [x] Forgot password on the sign-in page, change password in Account
+- [ ] Make 5liltresh@gmail.com admin once that email signs up in this copy
+- [ ] Draggable booking panel (drawer that snaps between stops) on the request page
+- [ ] Card or in-app payment instead of pay on delivery

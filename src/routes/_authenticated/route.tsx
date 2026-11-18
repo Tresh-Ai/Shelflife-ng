@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, redirect, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { MapPin, ListOrdered, Truck, User, Store, Package } from "lucide-react";
-import { useProfile } from "@/lib/shop";
+import { useCatalogRealtime, useProfile } from "@/lib/shop";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -30,12 +30,13 @@ const BY_ROLE = {
 
 function Shell() {
   const { data: p } = useProfile();
+  useCatalogRealtime();
   const tabs = BY_ROLE[p?.mode ?? "buyer"];
   const path = useLocation({ select: (l) => l.pathname });
   const navigate = useNavigate();
   const onboarding = path === "/onboarding";
-  useEffect(() => { if (p && !p.onboarded && !onboarding) navigate({ to: "/onboarding", replace: true }); }, [p, onboarding, navigate]);
-  if (onboarding || (p && !p.onboarded)) return <div className="mx-auto min-h-dvh max-w-lg bg-background"><Outlet /></div>;
+  useEffect(() => { if (p && p.onboarded === false && !onboarding) navigate({ to: "/onboarding", replace: true }); }, [p, onboarding, navigate]);
+  if (onboarding || (p && p.onboarded === false)) return <div className="mx-auto min-h-dvh max-w-lg bg-background"><Outlet /></div>;
   return (
     <div className="mx-auto flex min-h-dvh max-w-lg flex-col bg-background">
       <div className="flex-1 pb-20"><Outlet /></div>

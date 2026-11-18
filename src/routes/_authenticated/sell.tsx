@@ -1,11 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { PlugZap } from "lucide-react";
+import { Phone, PlugZap } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { CATEGORIES, UNITS } from "@/lib/catalog";
 import { naira } from "@/lib/dispatch";
+import { useContacts } from "@/lib/contacts";
 import { useMarkets } from "@/lib/shop";
 import { useUserId } from "@/lib/trips";
 
@@ -28,6 +29,15 @@ function Sell() {
     queryFn: async () => (await supabase.from("orders").select("*").eq("seller_id", me!).order("created_at", { ascending: false })).data ?? [],
   });
   const refresh = () => qc.invalidateQueries({ queryKey: ["products"] });
+  const contact = useContacts(orders.map((o) => o.buyer_id));
+  // The delivery carrying each order, so the seller can follow a buyer's trip.
+  const { data: orderTrips = [] } = useQuery({
+    queryKey: ["trips", "carrying", me, orders.map((o) => o.id).join(",")],
+    enabled: orders.length > 0,
+    queryFn: async () => (await supabase.from("trips").select("id, order_ids, status")
+      .overlaps("order_ids", orders.map((o) => o.id))).data ?? [],
+  });
+  const tripFor = (orderId: string) => orderTrips.find((t) => t.order_ids.includes(orderId));
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -86,13 +96,23 @@ function Sell() {
       <h2 className="mt-8 text-xl font-extrabold">Orders</h2>
       {orders.length === 0 && <p className="mt-2 text-sm text-muted-foreground">No orders yet.</p>}
       <ul className="mt-3 space-y-2">
-        {orders.map((o) => (
-          <li key={o.id} className="rounded-xl border bg-card p-3">
-            <div className="flex justify-between text-sm font-bold"><span className="capitalize">{o.status}</span><span>{naira(o.total_ngn)}</span></div>
-            <p className="mt-1 text-xs text-muted-foreground">{(o.items as { name: string; qty: number; unit: string }[]).map((i) => `${i.qty} ${i.unit} ${i.name}`).join(", ")}</p>
-            {o.status === "placed" && <button onClick={() => setStatus(o.id, "ready")} className="mt-2 h-9 rounded-lg bg-primary px-3 text-sm font-bold text-primary-foreground">Mark ready for pickup</button>}
-          </li>
-        ))}
+        {orders.map((o) => {
+          const buyer = contact(o.buyer_id);
+          const tel = buyer?.phone?.replace(/[^\d+]/g, "");
+          const trip = tripFor(o.id);
+          return (
+            <li key={o.id} className="rounded-xl border bg-card p-3">
+              <div className="flex justify-between text-sm font-bold"><span className="capitalize">{o.status}</span><span>{naira(o.total_ngn)}</span></div>
+              <p className="mt-1 text-xs text-muted-foreground">{(o.items as { name: string; qty: number; unit: string }[]).map((i) => `${i.qty} ${i.unit} ${i.name}`).join(", ")}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="min-w-0 flex-1 truncate text-sm font-bold">{buyer?.full_name ?? "Buyer"}{buyer?.phone ? ` · ${buyer.phone}` : ""}</span>
+                {tel && <a href={`tel:${tel}`} className="flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-bold text-primary-foreground"><Phone className="size-3.5" />Call buyer</a>}
+                {trip && <Link to="/trips/$id" params={{ id: trip.id }} className="flex h-9 items-center rounded-lg bg-muted px-3 text-xs font-bold">View delivery</Link>}
+              </div>
+              {o.status === "placed" && <button onClick={() => setStatus(o.id, "ready")} className="mt-2 h-9 rounded-lg bg-primary px-3 text-sm font-bold text-primary-foreground">Mark ready for pickup</button>}
+            </li>
+          );
+        })}
       </ul>
     </main>
   );

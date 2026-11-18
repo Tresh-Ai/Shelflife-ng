@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { ChevronRight, ListOrdered, Package, Truck, ShoppingBasket } from "lucide-react";
+import { ChevronRight, ListOrdered, Package, ShieldCheck, Truck, ShoppingBasket } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ROLES, SELLER_TYPES } from "@/lib/catalog";
@@ -22,6 +22,9 @@ function Account() {
   const [phone, setPhone] = useState("");
   const [vehicle, setVehicle] = useState("");
   const [market, setMarket] = useState("");
+  const [cur, setCur] = useState("");
+  const [pw, setPw] = useState("");
+  const [pw2, setPw2] = useState("");
   useEffect(() => { if (p) { setName(p.full_name ?? ""); setPhone(p.phone ?? ""); setVehicle(p.vehicle ?? ""); setMarket(p.market_id ?? ""); } }, [p]);
 
   if (!p) return <main className="px-5 pt-8 text-muted-foreground">Loading…</main>;
@@ -35,6 +38,18 @@ function Account() {
       market_id: p!.mode === "seller" ? market || null : p!.market_id ?? null,
     }).eq("id", p!.id);
     if (error) toast.error(error.message); else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["profile"] }); }
+  }
+  async function changePassword() {
+    if (pw.length < 6) { toast.error("New password must be at least 6 characters"); return; }
+    if (pw !== pw2) { toast.error("The two new passwords do not match"); return; }
+    const { error } = await supabase.auth.updateUser({ password: pw, current_password: cur });
+    if (error) { toast.error(error.message); return; }
+    toast.success("Password updated"); setCur(""); setPw(""); setPw2("");
+  }
+  async function emailReset() {
+    if (!email) return;
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
+    if (error) toast.error(error.message); else toast.success("Reset link sent to your email");
   }
   async function signOut() {
     await qc.cancelQueries(); qc.clear();
@@ -69,6 +84,12 @@ function Account() {
         ))}
       </ul>
 
+      {p.isAdmin && (
+        <ul className="mt-3 divide-y rounded-2xl border bg-card">
+          <li><Link to="/admin" className="flex items-center gap-3 p-4 font-semibold"><ShieldCheck className="size-5" /><span className="flex-1">Admin console</span><ChevronRight className="size-4 text-muted-foreground" /></Link></li>
+        </ul>
+      )}
+
       <h2 className="mt-8 text-lg font-extrabold">Your details</h2>
       <label className="mt-3 block text-sm font-semibold">Name<input className={input + " mt-1.5"} value={name} onChange={(e) => setName(e.target.value)} /></label>
       <label className="mt-4 block text-sm font-semibold">Phone<input className={input + " mt-1.5"} type="tel" placeholder="080..." value={phone} onChange={(e) => setPhone(e.target.value)} /></label>
@@ -86,6 +107,20 @@ function Account() {
         </label>
       )}
       <button onClick={save} className="mt-5 h-12 w-full rounded-xl bg-primary font-bold text-primary-foreground">Save</button>
+
+      <h2 className="mt-8 text-lg font-extrabold">Password</h2>
+      <label className="mt-3 block text-sm font-semibold">Current password
+        <input className={input + " mt-1.5"} type="password" autoComplete="current-password" value={cur} onChange={(e) => setCur(e.target.value)} />
+      </label>
+      <label className="mt-4 block text-sm font-semibold">New password
+        <input className={input + " mt-1.5"} type="password" minLength={6} autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+      </label>
+      <label className="mt-4 block text-sm font-semibold">Repeat new password
+        <input className={input + " mt-1.5"} type="password" minLength={6} autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
+      </label>
+      <button onClick={changePassword} className="mt-5 h-12 w-full rounded-xl bg-muted font-bold">Update password</button>
+      <button onClick={emailReset} className="mt-3 h-12 w-full rounded-xl border font-bold">Email me a reset link</button>
+
       <button onClick={signOut} className="mt-3 h-12 w-full rounded-xl bg-muted font-bold">Sign out</button>
     </main>
   );

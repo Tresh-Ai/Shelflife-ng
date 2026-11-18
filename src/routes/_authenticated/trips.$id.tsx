@@ -4,8 +4,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Check } from "lucide-react";
 import { toast } from "sonner";
 import { TripMap } from "@/components/app/TripMap";
+import { ContactList } from "@/components/app/Contacts";
 import { supabase } from "@/integrations/supabase/client";
 import { STATUS_LABEL, VEHICLES, naira } from "@/lib/dispatch";
+import { useContacts } from "@/lib/contacts";
+import { useMarkets } from "@/lib/shop";
 import { useTrip, useUserId, type Trip } from "@/lib/trips";
 
 export const Route = createFileRoute("/_authenticated/trips/$id")({
@@ -20,14 +23,20 @@ function TripPage() {
   const me = useUserId();
   const qc = useQueryClient();
   const { data: trip, isLoading } = useTrip(id);
+  const { data: markets } = useMarkets();
   const isHauler = !!trip && trip.hauler_id === me;
+  const isBuyer = !!trip && trip.buyer_id === me;
   const live = !!trip && (trip.status === "accepted" || trip.status === "picked_up");
 
-  const { data: hauler } = useQuery({
-    queryKey: ["profile", trip?.hauler_id],
-    enabled: !!trip?.hauler_id,
-    queryFn: async () => (await supabase.from("profiles").select("full_name, vehicle").eq("id", trip!.hauler_id!).maybeSingle()).data,
+  // The sellers whose stock is riding along, so every side can call the others.
+  const { data: carried = [] } = useQuery({
+    queryKey: ["orders", "carried", id, trip?.order_ids?.join(",")],
+    enabled: !!trip?.order_ids?.length,
+    queryFn: async () => (await supabase.from("orders").select("id, seller_id, market_id").in("id", trip!.order_ids)).data ?? [],
   });
+  const contact = useContacts([trip?.buyer_id, trip?.hauler_id, ...carried.map((o) => o.seller_id)]);
+  const hauler = contact(trip?.hauler_id);
+  const buyer = contact(trip?.buyer_id);
 
   // The hauler's phone shares its GPS position while the trip is active.
   useEffect(() => {
@@ -56,6 +65,13 @@ function TripPage() {
 
   const step = STEPS.indexOf(trip.status as (typeof STEPS)[number]);
   const vehicle = VEHICLES.find((v) => v.id === trip.vehicle);
+  const marketName = (mid: string) => markets?.find((m) => m.id === mid)?.name ?? "Market seller";
+
+  const parties = [
+    isBuyer ? null : { label: "Buyer", contact: buyer },
+    isHauler ? null : { label: "Driver", contact: hauler },
+    ...carried.map((o) => ({ label: marketName(o.market_id), contact: contact(o.seller_id) })),
+  ].filter((p): p is { label: string; contact: ReturnType<typeof contact> } => !!p && !!p.contact);
 
   return (
     <div>
@@ -75,7 +91,7 @@ function TripPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           {trip.status === "searching" ? "Haulers nearby can see your request now." :
            trip.status === "delivered" ? "Your produce has arrived." :
-           live && trip.hauler_lat == null ? "Waiting for the hauler's live location." : `${trip.distance_km} km trip`}
+           live && trip.hauler_lat == null ? "Waiting for the driver's live location." : `${trip.distance_km} km trip`}
         </p>
 
         {trip.status !== "cancelled" && (
@@ -86,7 +102,7 @@ function TripPage() {
 
         {hauler && (
           <div className="mt-5 flex items-center gap-3 rounded-xl bg-muted p-3">
-            <span className="grid size-11 place-items-center rounded-full bg-primary font-bold text-primary-foreground">{(hauler.full_name ?? "H")[0]?.toUpperCase()}</span>
+            <span className="grid size-11 place-items-center rounded-full bg-primary font-bold text-primary-foreground">{(hauler.full_name ?? "D")[0]?.toUpperCase()}</span>
             <div>
               <p className="font-bold">{isHauler ? "You are driving" : hauler.full_name}</p>
               <p className="text-xs text-muted-foreground">{hauler.vehicle || vehicle?.name}</p>
@@ -104,10 +120,12 @@ function TripPage() {
           <Row k="Total (pay on delivery)" v={naira(trip.price_ngn + trip.goods_ngn)} bold />
         </dl>
 
+        <ContactList people={parties} />
+
         <div className="mt-6 space-y-2">
           {isHauler && trip.status === "accepted" && <Action onClick={() => setStatus("picked_up")}>Confirm pickup</Action>}
           {isHauler && trip.status === "picked_up" && <Action onClick={() => setStatus("delivered")}><Check className="size-5" /> Mark delivered</Action>}
-          {!isHauler && trip.status === "searching" && (
+          {isBuyer && trip.status === "searching" && (
             <button onClick={() => setStatus("cancelled")} className="h-12 w-full rounded-xl bg-muted font-bold">Cancel request</button>
           )}
         </div>

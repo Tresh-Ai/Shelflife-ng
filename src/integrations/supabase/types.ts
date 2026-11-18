@@ -127,6 +127,7 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          email: string | null
           full_name: string | null
           id: string
           market_id: string | null
@@ -138,6 +139,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          email?: string | null
           full_name?: string | null
           id: string
           market_id?: string | null
@@ -149,6 +151,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          email?: string | null
           full_name?: string | null
           id?: string
           market_id?: string | null
@@ -263,6 +266,14 @@ export type Database = {
         Returns: boolean
       }
       place_order: { Args: { _items: Json }; Returns: string[] }
+      shares_delivery_with: {
+        Args: { _a: string; _b: string }
+        Returns: boolean
+      }
+      trip_carries_order: {
+        Args: { _trip_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin"
