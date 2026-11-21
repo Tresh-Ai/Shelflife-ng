@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Truck } from "lucide-react";
+import { Truck, Eye, EyeOff, Check } from "lucide-react";
+import { checkPassword, passwordOk } from "@/lib/password";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -22,6 +23,8 @@ function AuthPage() {
   const [role, setRole] = useState<Role | null>(null);
   const [sellerType, setSellerType] = useState<SellerType | null>(null);
   const [sentReset, setSentReset] = useState(false);
+  const [show, setShow] = useState(false);
+  const [confirmPw, setConfirmPw] = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => data.session && navigate({ to: "/dispatch", replace: true }));
@@ -38,6 +41,8 @@ function AuthPage() {
     } else {
       if (!role) { toast.error("Choose how you will use ShelfLife"); setBusy(false); return; }
       if (role === "seller" && !sellerType) { toast.error("Choose what kind of seller you are"); setBusy(false); return; }
+      if (!passwordOk(password)) { toast.error("Your password needs 8+ characters with a letter and a number"); setBusy(false); return; }
+      if (password !== confirmPw) { toast.error("The two passwords do not match"); setBusy(false); return; }
       const { data, error } = await supabase.auth.signUp({
         email, password,
         options: { emailRedirectTo: window.location.origin, data: { full_name: name, mode: role, seller_type: role === "seller" ? sellerType : null } },
@@ -67,7 +72,7 @@ function AuthPage() {
     if (error) toast.error(error.message); else setSentReset(true);
   }
 
-  const input = "h-14 w-full rounded-xl bg-muted px-4 text-base outline-none focus:ring-2 focus:ring-ring";
+  const input = "h-14 w-full rounded-2xl border border-transparent bg-muted px-4 text-base outline-none transition focus:border-ring focus:bg-card aria-[invalid=true]:border-destructive";
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col px-6 pt-14 pb-10">
@@ -82,7 +87,7 @@ function AuthPage() {
         </div>
       ) : (
         <>
-          <h1 className="mt-14 text-3xl font-extrabold tracking-tight">{mode === "in" ? "Welcome back" : "Create your account"}</h1>
+          <h1 className="mt-12 text-3xl font-extrabold tracking-tight">{mode === "in" ? "Welcome back" : "Create your account"}</h1>
           <form onSubmit={submit} className="mt-8 space-y-3">
             {mode === "up" && (
               <>
@@ -109,11 +114,32 @@ function AuthPage() {
               </>
             )}
             <input className={input} type="email" placeholder="Email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <input className={input} type="password" placeholder="Password" minLength={6} autoComplete={mode === "in" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <div className="relative">
+              <input className={input + " pr-12"} type={show ? "text" : "password"} placeholder="Password" autoComplete={mode === "in" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <button type="button" onClick={() => setShow(!show)} aria-label={show ? "Hide password" : "Show password"} className="absolute top-1/2 right-2 grid size-10 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground hover:text-foreground">
+                {show ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+              </button>
+            </div>
+            {mode === "up" && (
+              <>
+                <input className={input} type={show ? "text" : "password"} placeholder="Confirm password" autoComplete="new-password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} required
+                  aria-invalid={confirmPw.length > 0 && confirmPw !== password} />
+                {password.length > 0 && (
+                  <ul className="flex flex-wrap gap-x-4 gap-y-1 px-1 text-xs">
+                    {checkPassword(password).map((c) => (
+                      <li key={c.id} className={"flex items-center gap-1 " + (c.ok ? "font-semibold text-success" : "text-muted-foreground")}>
+                        <Check className={"size-3.5 " + (c.ok ? "" : "opacity-30")} />{c.label}
+                      </li>
+                    ))}
+                    {confirmPw.length > 0 && confirmPw !== password && <li className="text-destructive">Passwords do not match</li>}
+                  </ul>
+                )}
+              </>
+            )}
             {mode === "in" && (
               <button type="button" onClick={forgot} className="text-sm font-bold underline">Forgot password?</button>
             )}
-            <button disabled={busy} className="h-14 w-full rounded-xl bg-primary text-base font-bold text-primary-foreground disabled:opacity-60">
+            <button disabled={busy || (mode === "up" && (!passwordOk(password) || password !== confirmPw))} className="h-14 w-full rounded-xl bg-primary text-base font-bold text-primary-foreground disabled:opacity-60">
               {busy ? "Please wait…" : mode === "in" ? "Sign in" : "Sign up"}
             </button>
           </form>

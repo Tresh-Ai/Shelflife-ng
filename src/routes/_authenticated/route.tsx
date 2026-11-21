@@ -40,12 +40,12 @@ function Shell() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-lg flex-col bg-background">
       <div className="flex-1 pb-20"><Outlet /></div>
-      <nav className="pb-safe fixed inset-x-0 bottom-0 z-[1000] border-t bg-card">
-        <ul className="mx-auto grid max-w-lg grid" style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }}>
+      <nav className="pb-safe fixed inset-x-0 bottom-0 z-[1000] border-t border-border/60 bg-card/85 backdrop-blur-xl">
+        <ul className="mx-auto grid max-w-lg px-2" style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }}>
           {tabs.map(({ to, label, icon: Icon }) => (
             <li key={to}>
-              <Link to={to} className="flex flex-col items-center gap-1 pt-2.5 pb-1 text-[11px] font-semibold text-muted-foreground" activeProps={{ className: "!text-foreground" }}>
-                <Icon className="size-5" />{label}
+              <Link to={to} className="group flex flex-col items-center gap-0.5 py-2 text-[11px] font-semibold text-muted-foreground transition-colors" activeProps={{ className: "!text-foreground is-active" }}>
+                <span className="grid h-7 w-12 place-items-center rounded-full transition-colors group-[.is-active]:bg-primary/12 group-[.is-active]:text-primary"><Icon className="size-5" /></span>{label}
               </Link>
             </li>
           ))}

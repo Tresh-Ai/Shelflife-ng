@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Phone, PlugZap } from "lucide-react";
+import { ChevronDown, Phone, PlugZap, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { CATEGORIES, UNITS } from "@/lib/catalog";
@@ -61,14 +61,12 @@ function Sell() {
   return (
     <main className="px-4 pt-6 pb-8">
       <h1 className="text-3xl font-extrabold tracking-tight">Your stock</h1>
-      <div className="mt-4 flex gap-3 rounded-2xl border border-dashed p-4">
-        <PlugZap className="mt-0.5 size-5 shrink-0" />
-        <div><p className="font-bold">Connect your inventory system <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-[11px]">Coming soon</span></p>
-          <p className="text-sm text-muted-foreground">Warehouses and storage centres will sync stock automatically as crates come in and go out.</p></div>
-      </div>
-
-      <form onSubmit={add} className="mt-6 space-y-2.5 rounded-2xl border bg-card p-4">
-        <h2 className="font-extrabold">List produce</h2>
+      <details className="group mt-5 rounded-2xl border bg-card" open={mine.length === 0}>
+        <summary className="flex h-14 cursor-pointer list-none items-center gap-3 px-4 font-bold">
+          <span className="grid size-8 place-items-center rounded-full bg-primary text-primary-foreground"><Plus className="size-4" /></span>
+          List new produce<ChevronDown className="ml-auto size-4 text-muted-foreground transition group-open:rotate-180" />
+        </summary>
+      <form onSubmit={add} className="space-y-2.5 px-4 pb-4">
         <input className={input} placeholder="e.g. Yam tubers (Benue)" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required />
         <div className="grid grid-cols-2 gap-2">
           <select className={input} value={f.category} onChange={(e) => setF({ ...f, category: e.target.value })}>{CATEGORIES.map((c) => <option key={c.id}>{c.id}</option>)}</select>
@@ -79,8 +77,9 @@ function Sell() {
         <select className={input} value={f.market} onChange={(e) => setF({ ...f, market: e.target.value })}>{markets?.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}</select>
         <button className="h-12 w-full rounded-xl bg-primary font-bold text-primary-foreground">Add listing</button>
       </form>
+      </details>
 
-      <h2 className="mt-8 text-xl font-extrabold">Listings</h2>
+      <h2 className="mt-8 text-xl font-extrabold">Listings <span className="text-sm font-semibold text-muted-foreground">{mine.length}</span></h2>
       {mine.length === 0 && <p className="mt-2 text-sm text-muted-foreground">No listings yet.</p>}
       <ul className="mt-3 space-y-2">
         {mine.map((p) => (
@@ -114,6 +113,9 @@ function Sell() {
           );
         })}
       </ul>
+      <p className="mt-10 flex items-center gap-2 rounded-xl bg-muted px-3 py-2.5 text-xs text-muted-foreground">
+        <PlugZap className="size-4 shrink-0" />Warehouse inventory sync is coming soon.
+      </p>
     </main>
   );
 }

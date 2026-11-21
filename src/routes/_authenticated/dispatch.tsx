@@ -70,7 +70,6 @@ function Dispatch() {
     navigate({ to: "/trips/$id", params: { id: data.id } });
   }
 
-  const field = "flex h-12 w-full items-center gap-2 rounded-xl bg-muted px-4 text-[15px] font-semibold";
 
   if (step === "pay" && pickup && dropoff) {
     return (
@@ -104,7 +103,7 @@ function Dispatch() {
       <TripMap pickup={pickup} dropoff={dropoff} className="h-[36dvh] w-full" />
       <section className="relative z-[500] -mt-5 rounded-t-3xl bg-card px-5 pt-3 pb-6 shadow-[var(--shadow-sheet)]">
         <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-border" />
-        <h1 className="text-2xl font-extrabold tracking-tight">{isSeller ? "Send stock to a buyer" : "Where to?"}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{isSeller ? "Send stock to a buyer" : "Request a delivery"}</h1>
 
         {!isSeller && (
           <Link to="/shop" className="mt-4 flex items-center gap-3 rounded-xl bg-primary/10 p-3">
@@ -117,36 +116,38 @@ function Dispatch() {
           </Link>
         )}
 
-        <div className="mt-4 space-y-2">
-          <div className="relative">
-            <span className="absolute top-1/2 left-4 size-2.5 -translate-y-1/2 rounded-full bg-foreground" />
-            {hasBasket ? (
-              <div className={field + " pl-10"}>{pickup?.name ?? "Market"}<span className="ml-auto text-xs text-muted-foreground">market pickup</span></div>
-            ) : (
-              <button onClick={() => setPicking("pickup")} aria-label={isSeller ? "Your store or farm" : "Pick up from"} className={field + " pl-10 pr-4"}>
-                <span className="truncate">{pickupSel?.name ?? (isSeller ? "Your store or farm" : "Pick up from")}</span>
-                <Search className="ml-auto size-4 shrink-0 text-muted-foreground" />
-              </button>
-            )}
-          </div>
-          <div className="relative">
-            <span className="absolute top-1/2 left-4 size-2.5 -translate-y-1/2 rounded-[3px] bg-success" />
-            <button onClick={() => setPicking("dropoff")} aria-label={isSeller ? "Deliver to buyer" : "Deliver to"} className={field + " pl-10 pr-4"}>
-              <span className="truncate">{dropoff?.name ?? (isSeller ? "Deliver to buyer" : "Deliver to")}</span>
+        <div className="relative mt-4 rounded-2xl bg-muted p-1.5">
+          <span aria-hidden className="absolute top-[30px] bottom-[30px] left-[23px] w-px bg-foreground/25" />
+          {hasBasket ? (
+            <div className="flex h-12 items-center gap-3 px-3 text-[15px] font-semibold">
+              <span className="size-2.5 shrink-0 rounded-full bg-foreground" /><span className="truncate">{pickup?.name ?? "Market"}</span>
+              <span className="ml-auto shrink-0 text-xs font-medium text-muted-foreground">Market pickup</span>
+            </div>
+          ) : (
+            <button onClick={() => setPicking("pickup")} className="flex h-12 w-full items-center gap-3 rounded-xl px-3 text-left text-[15px] font-semibold transition hover:bg-card">
+              <span className="size-2.5 shrink-0 rounded-full bg-foreground" />
+              <span className={"truncate " + (pickupSel ? "" : "text-muted-foreground")}>{pickupSel?.name ?? (isSeller ? "Your store or farm" : "Pick up from")}</span>
               <Search className="ml-auto size-4 shrink-0 text-muted-foreground" />
             </button>
-          </div>
+          )}
+          <div className="ml-10 h-px bg-border" />
+          <button onClick={() => setPicking("dropoff")} className="flex h-12 w-full items-center gap-3 rounded-xl px-3 text-left text-[15px] font-semibold transition hover:bg-card">
+            <span className="size-2.5 shrink-0 rounded-[3px] bg-success" />
+            <span className={"truncate " + (dropoff ? "" : "text-muted-foreground")}>{dropoff?.name ?? (isSeller ? "Deliver to buyer" : "Where to?")}</span>
+            <Search className="ml-auto size-4 shrink-0 text-muted-foreground" />
+          </button>
         </div>
+        {ready && <p className="mt-2 px-1 text-xs font-medium text-muted-foreground">{km} km trip</p>}
 
-        <ul className="mt-4 space-y-2">
+        <ul className={"mt-4 space-y-1.5 transition-opacity " + (ready ? "" : "opacity-60")}>
           {quotes.map(({ v, price, minutes }) => {
             const Icon = ICON[v.id];
             const on = vehicle === v.id;
             return (
               <li key={v.id}>
                 <button onClick={() => setVehicle(v.id)} aria-pressed={on}
-                  className={"flex w-full items-center gap-3 rounded-xl border-2 p-3 text-left transition " + (on ? "border-foreground" : "border-transparent bg-muted")}>
-                  <span className="grid size-11 place-items-center rounded-lg bg-card"><Icon className="size-5" /></span>
+                  className={"flex w-full items-center gap-3 rounded-xl border-2 p-3 text-left transition " + (on ? "border-foreground bg-card" : "border-transparent hover:bg-muted")}>
+                  <span className="grid size-11 place-items-center rounded-xl bg-muted"><Icon className="size-5" /></span>
                   <span className="flex-1"><span className="block font-bold">{v.name}</span><span className="block text-xs text-muted-foreground">{v.note}</span></span>
                   <span className="text-right">
                     <span className="block font-extrabold tabular-nums">{ready ? naira(price) : "—"}</span>
@@ -159,7 +160,7 @@ function Dispatch() {
         </ul>
 
         <button onClick={() => setStep("pay")} disabled={!ready}
-          className="mt-5 h-14 w-full rounded-xl bg-primary text-base font-bold text-primary-foreground disabled:opacity-40">
+          className="mt-5 h-14 w-full rounded-2xl bg-primary text-base font-bold text-primary-foreground shadow-sm transition active:scale-[0.99] disabled:opacity-40">
           {ready ? `Continue · ${naira(goods + chosen.price)}` : hasBasket ? "Choose where to deliver" : "Choose pickup and drop-off"}
         </button>
       </section>
