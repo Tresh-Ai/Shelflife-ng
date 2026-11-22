@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "DM Serif Display", Georgia, serif;
-  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-display: "Montserrat", system-ui, sans-serif;
+  --font-sans: "Montserrat", system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -36,20 +36,22 @@
 }
 
 :root {
-  --background: oklch(0.985 0.004 95);
-  --foreground: oklch(0.19 0.018 160);
-  --card: oklch(1 0 0);
-  --primary: oklch(0.31 0.065 158);
+  --background: oklch(0.945 0.03 85);
+  --brand-green: #556B2F;
+  --brand-terracotta: #C96A3D;
+  --foreground: oklch(0.24 0.03 125);
+  --card: oklch(0.98 0.012 85);
+  --primary: oklch(0.47 0.08 125);
   --primary-foreground: oklch(0.99 0.003 80);
-  --secondary: oklch(0.94 0.035 145);
-  --muted: oklch(0.962 0.009 100);
-  --muted-foreground: oklch(0.49 0.022 155);
-  --accent: oklch(0.57 0.18 34);
+  --secondary: oklch(0.91 0.04 120);
+  --muted: oklch(0.915 0.03 85);
+  --muted-foreground: oklch(0.45 0.03 110);
+  --accent: oklch(0.6 0.13 45);
   --accent-foreground: oklch(0.99 0.003 80);
-  --success: oklch(0.44 0.1 157);
+  --success: oklch(0.47 0.08 125);
   --warning: oklch(0.68 0.17 55);
   --destructive: oklch(0.55 0.2 28);
-  --border: oklch(0.89 0.012 145);
+  --border: oklch(0.86 0.03 90);
 }
 
 * { border-color: var(--border); }
@@ -59,11 +61,11 @@ html, body { background: var(--background); color: var(--foreground); font-famil
 
 /* Landing page (scoped tokens: red primary, green brand) */
 .sl-page {
-  --primary: oklch(0.57 0.18 34);
-  --muted-surface: oklch(0.962 0.009 100);
-  --muted: oklch(0.49 0.022 155);
-  --brand: oklch(0.31 0.065 158);
-  --brand-2: oklch(0.44 0.1 157);
+  --primary: oklch(0.6 0.13 45);
+  --muted-surface: oklch(0.915 0.03 85);
+  --muted: oklch(0.45 0.03 110);
+  --brand: oklch(0.47 0.08 125);
+  --brand-2: oklch(0.55 0.09 125);
 }
 html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 .sl-page a:focus-visible, .sl-page button:focus-visible { outline: 2px solid var(--primary) !important; outline-offset: 4px; box-shadow: none; }
@@ -72,7 +74,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 .sl-header { position: sticky; z-index: 20; top: 0; height: 76px; border-bottom: 1px solid color-mix(in oklab, var(--border) 75%, transparent); background: color-mix(in oklab, var(--background) 92%, transparent); backdrop-filter: blur(16px); }
 .sl-nav { display: flex; height: 100%; align-items: center; justify-content: space-between; gap: 28px; }
 .sl-wordmark { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 9px; color: var(--foreground); font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-decoration: none; }
-.sl-mark { display: inline-grid; width: 28px; height: 28px; place-items: center; color: var(--primary); }
+.sl-mark { display: inline-grid; height: 36px; place-items: center; color: var(--primary); }
 .sl-mark svg { width: 100%; height: 100%; }
 .sl-nav-links { display: flex; align-items: center; gap: 34px; }
 .sl-nav-links a, .sl-nav-links a:hover, .sl-button { min-height: 44px; border-radius: 4px !important; padding-inline: 18px !important; font-family: var(--font-sans); font-size: 13px !important; font-weight: 700 !important; box-shadow: none !important; transition: transform 180ms ease, background-color 180ms ease, color 180ms ease !important; }

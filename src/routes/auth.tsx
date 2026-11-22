@@ -1,6 +1,7 @@
+import { Logo } from "@/components/app/Logo";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Truck, Eye, EyeOff, Check } from "lucide-react";
+import { Eye, EyeOff, Check } from "lucide-react";
 import { checkPassword, passwordOk } from "@/lib/password";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -77,7 +78,7 @@ function AuthPage() {
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col px-6 pt-14 pb-10">
       <div className="flex items-center gap-2 text-lg font-extrabold">
-        <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground"><Truck className="size-4" /></span>ShelfLife
+        <Logo className="h-10 w-auto" />
       </div>
       {sent ? (
         <div className="mt-16">

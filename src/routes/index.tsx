@@ -1,3 +1,4 @@
+import { Logo } from "@/components/app/Logo";
 import { useEffect } from "react";
 import { ArrowRight, BellRing, Boxes, ShieldCheck, Map as MapIcon, MapPin, PackageCheck, Route as RouteIcon, ScanLine, Warehouse } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -19,14 +20,7 @@ export const Route = createFileRoute("/")({
 });
 
 function BrandMark() {
-  return (
-    <span className="sl-mark" aria-hidden="true">
-      <svg viewBox="0 0 32 32" fill="none">
-        <path d="M25.6 5.8C14 5.8 7.2 9.1 6.4 17.1c-.4 4.4 2.7 7.1 6.6 6.2C20 21.4 23.3 13.5 25.6 5.8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-        <path d="M5.8 26.1c3.7-5.8 8.3-9.7 15.1-13.7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    </span>
-  );
+  return <Logo className="h-9 w-auto" />;
 }
 
 function useScrollMotion() {
@@ -79,7 +73,6 @@ function SiteHeader() {
       <nav className="sl-container sl-nav" aria-label="Main navigation">
         <a className="sl-wordmark" href="#top" aria-label="ShelfLife home">
           <BrandMark />
-          <span>SHELFLIFE</span>
         </a>
         <div className="sl-nav-links">
           <a href="#platform">Platform</a>
@@ -285,7 +278,7 @@ function SiteFooter() {
       <div className="sl-container">
         <div className="sl-footer-top">
           <div className="sl-footer-brand">
-            <a className="sl-wordmark" href="#top" aria-label="ShelfLife home"><BrandMark /><span>SHELFLIFE</span></a>
+            <a className="sl-wordmark" href="#top" aria-label="ShelfLife home"><BrandMark /></a>
             <p>The network that moves fresh produce and keeps it fresh on the way.</p>
           </div>
           <nav className="sl-footer-col" aria-label="Product">
