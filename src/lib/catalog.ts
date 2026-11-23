@@ -27,7 +27,6 @@ export const ROLES: { id: Role; title: string; note: string }[] = [
 
 export type SellerType = "farmer" | "storage" | "distributor" | "vendor";
 export const SELLER_TYPES: { id: SellerType; title: string; note: string }[] = [
-  { id: "farmer", title: "Farmer", note: "You grow it" },
   { id: "storage", title: "Storage / warehouse", note: "You keep stock for others" },
   { id: "distributor", title: "Distributor", note: "You buy in bulk and supply" },
   { id: "vendor", title: "Vendor", note: "You sell at a market stall or shop" },

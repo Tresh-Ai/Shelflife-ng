@@ -48,6 +48,8 @@ export const STATUS_LABEL: Record<string, string> = {
   searching: "Finding a hauler",
   accepted: "Hauler on the way",
   picked_up: "In transit",
+  arrived: "Driver has arrived",
+  paid: "Paid, awaiting handover",
   delivered: "Delivered",
   cancelled: "Cancelled",
 };

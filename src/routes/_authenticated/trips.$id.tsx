@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/trips/$id")({
   component: TripPage,
 });
 
-const STEPS = ["searching", "accepted", "picked_up", "delivered"] as const;
+const STEPS = ["searching", "accepted", "picked_up", "arrived", "paid", "delivered"] as const;
 
 function TripPage() {
   const { id } = Route.useParams();
@@ -26,7 +26,7 @@ function TripPage() {
   const { data: markets } = useMarkets();
   const isHauler = !!trip && trip.hauler_id === me;
   const isBuyer = !!trip && trip.buyer_id === me;
-  const live = !!trip && (trip.status === "accepted" || trip.status === "picked_up");
+  const live = !!trip && (trip.status === "accepted" || trip.status === "picked_up" || trip.status === "arrived");
 
   // The sellers whose stock is riding along, so every side can call the others.
   const { data: carried = [] } = useQuery({
@@ -90,12 +90,14 @@ function TripPage() {
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
           {trip.status === "searching" ? "Haulers nearby can see your request now." :
-           trip.status === "delivered" ? "Your produce has arrived." :
+           trip.status === "delivered" ? "Handed over and paid." :
+           trip.status === "arrived" ? (isHauler ? "Collect payment from the buyer. They confirm it in the app." : "Pay the driver, then confirm below.") :
+           trip.status === "paid" ? (isHauler ? "The buyer confirmed payment. Check you have it, then hand over." : "The driver will hand over your goods now.") :
            live && trip.hauler_lat == null ? "Waiting for the driver's live location." : `${trip.distance_km} km trip`}
         </p>
 
         {trip.status !== "cancelled" && (
-          <ol className="mt-5 grid grid-cols-4 gap-1.5">
+          <ol className="mt-5 grid grid-cols-6 gap-1.5">
             {STEPS.map((s, i) => <li key={s} className={"h-1.5 rounded-full " + (i <= step ? "bg-foreground" : "bg-muted")} />)}
           </ol>
         )}
@@ -124,7 +126,10 @@ function TripPage() {
 
         <div className="mt-6 space-y-2">
           {isHauler && trip.status === "accepted" && <Action onClick={() => setStatus("picked_up")}>Confirm pickup</Action>}
-          {isHauler && trip.status === "picked_up" && <Action onClick={() => setStatus("delivered")}><Check className="size-5" /> Mark delivered</Action>}
+          {isHauler && trip.status === "picked_up" && <Action onClick={() => setStatus("arrived")}>I've arrived at drop-off</Action>}
+          {isBuyer && trip.status === "arrived" && <Action onClick={() => setStatus("paid")}>I've paid {naira(trip.price_ngn + trip.goods_ngn)}</Action>}
+          {isHauler && trip.status === "paid" && <Action onClick={() => setStatus("delivered")}><Check className="size-5" /> Payment received, goods handed over</Action>}
+          {isHauler && trip.status === "arrived" && <p className="text-center text-sm text-muted-foreground">Waiting for the buyer to confirm payment.</p>}
           {isBuyer && trip.status === "searching" && (
             <button onClick={() => setStatus("cancelled")} className="h-12 w-full rounded-xl bg-muted font-bold">Cancel request</button>
           )}

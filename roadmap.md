@@ -10,3 +10,9 @@
 - [ ] Make 5liltresh@gmail.com admin once that email signs up in this copy
 - [ ] Draggable booking panel (drawer that snaps between stops) on the request page
 - [ ] Card or in-app payment instead of pay on delivery
+
+## Next
+- [ ] Card/transfer payment held until handover (escrow) instead of cash
+- [ ] Push notifications when the app is closed
+- [ ] Seller "send to someone": pick a buyer contact as drop-off from the stock page
+- [ ] Polish shop, driver jobs and trips list to match the new stock page

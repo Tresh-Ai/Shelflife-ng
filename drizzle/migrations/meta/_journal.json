@@ -15,6 +15,13 @@
       "when": 1795005253499,
       "tag": "0001_driver_sees_order_parties",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795444084871,
+      "tag": "0002_safe_delivery_handoff",
+      "breakpoints": true
     }
   ]
 }
