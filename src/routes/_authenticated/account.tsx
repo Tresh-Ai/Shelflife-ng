@@ -1,7 +1,9 @@
+import { PlacePicker } from "@/components/app/PlacePicker";
+import type { Place } from "@/lib/dispatch";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { ChevronRight, ListOrdered, Package, ShieldCheck, Truck, ShoppingBasket } from "lucide-react";
+import { ChevronRight, ListOrdered, MapPin, Package, ShieldCheck, Truck, ShoppingBasket } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ROLES, SELLER_TYPES } from "@/lib/catalog";
@@ -22,10 +24,14 @@ function Account() {
   const [phone, setPhone] = useState("");
   const [vehicle, setVehicle] = useState("");
   const [market, setMarket] = useState("");
+  const [store, setStore] = useState<Place | null>(null);
+  const [picking, setPicking] = useState(false);
   const [cur, setCur] = useState("");
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
-  useEffect(() => { if (p) { setName(p.full_name ?? ""); setPhone(p.phone ?? ""); setVehicle(p.vehicle ?? ""); setMarket(p.market_id ?? ""); } }, [p]);
+  useEffect(() => { if (p) { setName(p.full_name ?? ""); setPhone(p.phone ?? ""); setVehicle(p.vehicle ?? ""); setMarket(p.market_id ?? "");
+    const x = p as unknown as { store_name?: string | null; store_lat?: number | null; store_lng?: number | null };
+    if (x.store_name && x.store_lat != null && x.store_lng != null) setStore({ id: "store", name: x.store_name, area: "", lat: x.store_lat, lng: x.store_lng }); } }, [p]);
 
   if (!p) return <main className="px-5 pt-8 text-muted-foreground">Loading…</main>;
   const role = ROLES.find((r) => r.id === p.mode);
@@ -36,7 +42,8 @@ function Account() {
       full_name: name, phone,
       vehicle: p!.mode === "driver" ? vehicle : p!.vehicle ?? null,
       market_id: p!.mode === "seller" ? market || null : p!.market_id ?? null,
-    }).eq("id", p!.id);
+      ...(p!.mode === "seller" && store ? { store_name: [store.name, store.area].filter(Boolean).join(" · "), store_lat: store.lat, store_lng: store.lng } : {}),
+    } as never).eq("id", p!.id);
     if (error) toast.error(error.message); else { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["profile"] }); }
   }
   async function changePassword() {
@@ -99,12 +106,25 @@ function Account() {
         </label>
       )}
       {p.mode === "seller" && (
-        <label className="mt-4 block text-sm font-semibold">Your market or store location
-          <select className={input + " mt-1.5"} value={market} onChange={(e) => setMarket(e.target.value)}>
-            <option value="">Choose a market</option>
-            {markets?.map((m) => <option key={m.id} value={m.id}>{m.name} · {m.area}</option>)}
-          </select>
-        </label>
+        <div className="mt-4 text-sm font-semibold">Your market or store location
+          <button type="button" onClick={() => setPicking(true)} className={input + " mt-1.5 flex items-center gap-2 text-left font-normal"}>
+            <MapPin className="size-4 shrink-0 text-primary" />
+            <span className="truncate">{store ? [store.name, store.area].filter(Boolean).join(" · ") : markets?.find((m) => m.id === market)?.name ?? "Type an address, use my location or pick a market"}</span>
+          </button>
+        </div>
+      )}
+      {picking && (
+        <PlacePicker
+          title="Where is your store?"
+          hubs={[]}
+          markets={(markets ?? []).map((m) => ({ id: m.id, name: m.name, area: m.area, lat: m.lat, lng: m.lng }))}
+          onClose={() => setPicking(false)}
+          onPick={(pl) => {
+            const m = markets?.find((x) => x.id === pl.id);
+            if (m) setMarket(m.id);
+            setStore(pl); setPicking(false);
+          }}
+        />
       )}
       <button onClick={save} className="mt-5 h-12 w-full rounded-xl bg-primary font-bold text-primary-foreground">Save</button>
 
