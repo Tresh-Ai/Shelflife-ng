@@ -22,6 +22,13 @@
       "when": 1795444084871,
       "tag": "0002_safe_delivery_handoff",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795515290397,
+      "tag": "0003_seller_store_location",
+      "breakpoints": true
     }
   ]
 }

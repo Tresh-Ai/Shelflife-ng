@@ -135,6 +135,9 @@ export type Database = {
           onboarded: boolean
           phone: string | null
           seller_type: string | null
+          store_lat: number | null
+          store_lng: number | null
+          store_name: string | null
           vehicle: string | null
         }
         Insert: {
@@ -147,6 +150,9 @@ export type Database = {
           onboarded?: boolean
           phone?: string | null
           seller_type?: string | null
+          store_lat?: number | null
+          store_lng?: number | null
+          store_name?: string | null
           vehicle?: string | null
         }
         Update: {
@@ -159,6 +165,9 @@ export type Database = {
           onboarded?: boolean
           phone?: string | null
           seller_type?: string | null
+          store_lat?: number | null
+          store_lng?: number | null
+          store_name?: string | null
           vehicle?: string | null
         }
         Relationships: []

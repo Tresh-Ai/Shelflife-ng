@@ -7,12 +7,13 @@
 - [x] Any pickup or drop-off: type an address or drop a pin, not just markets
 - [x] Admin page (treshtechcohort@gmail.com made admin)
 - [x] Forgot password on the sign-in page, change password in Account
-- [ ] Make 5liltresh@gmail.com admin once that email signs up in this copy
-- [ ] Draggable booking panel (drawer that snaps between stops) on the request page
-- [ ] Card or in-app payment instead of pay on delivery
+- [x] Make 5liltresh@gmail.com admin once that email signs up in this copy
+- [ ] Finish saving seller store locations and use the saved store as the seller pickup
+- [ ] Add a seller stock-to-delivery handoff from the stock page
+- [ ] Make the request map panel draggable with compact, mid and expanded stops
+- [ ] Polish Shop, Driver Jobs and Trips list for a consistent role-aware experience
+- [ ] Verify Google signup returns to the app on production hosts
 
 ## Next
-- [ ] Card/transfer payment held until handover (escrow) instead of cash
-- [ ] Push notifications when the app is closed
-- [ ] Seller "send to someone": pick a buyer contact as drop-off from the stock page
-- [ ] Polish shop, driver jobs and trips list to match the new stock page
+- [ ] Card/transfer payment held until handover (requires the user's provider choice and account setup)
+- [ ] Push notifications when the app is closed (requires push delivery credentials and subscription storage)
